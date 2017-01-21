@@ -22,7 +22,7 @@ public class Point3D {
     }
 
     public void transform(Matrix m)
-    {        
+    {
         //multiply m by point.
         float[] newMatrix = new float[4];
 
@@ -40,7 +40,7 @@ public class Point3D {
     public Vector3 toVector3() {
         return new Vector3(x, y, z);
     }
-    
+
     public string toString() {
         return "x: " + x + " y: " + y + " z: " + z;
     }
@@ -74,7 +74,7 @@ public class Point3D {
         //this method returns a list of points on R4 for the circle on the S3 sphere.
 
         List<Point4D> UnitQuaternions = new List<Point4D>();
-        float omega_scale = .06f;
+        float omega_scale = .08f;
         float sizeValue = ((2f * Mathf.PI) / omega_scale);
         float size = (int)sizeValue;
         int i = 0;
