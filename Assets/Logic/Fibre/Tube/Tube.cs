@@ -19,7 +19,6 @@ public class Tube : MonoBehaviour {
 
     }
 
-
     public void draw3(List<Point3D> points) {
         lr = GetComponent<LineRenderer>();
         float ThetaScale = 0.01f;
@@ -32,7 +31,6 @@ public class Tube : MonoBehaviour {
 
         Vector3 a = new Vector3(-0.816497f, -0.408248f, 0.408248f);
         Vector3 b = new Vector3(0.57735f, -0.57735f, 0.57735f);
-
         Vector3 c = new Vector3(0, 0, 0);
 
         //print(Size);
@@ -46,12 +44,12 @@ public class Tube : MonoBehaviour {
 
     }
 
-    /** 
+    /**
      * This draw subroutine will render a mesh in the shape of a tube
-     * given points as an argument. It will draw the mesh relevant to 
+     * given points as an argument. It will draw the mesh relevant to
      * the points and radius of the fibre, it should help visualise the
      * fibre better form just using LineRenderer to represent in 3D
-     **/
+     */
 
     public void draw(List<Point3D> points)
     {
@@ -71,13 +69,13 @@ public class Tube : MonoBehaviour {
         */
 
 
-        /** 
+        /**
          * Calculate the centre point of the circle from the points given.
-         * Also calculate the Radius of the circle. 
+         * Also calculate the Radius of the circle.
          * The results will be used to calculate perpendicualr vectors for a
          * circle at each point
-        **/
-        Vector3 P = points[0].toVector3(), 
+        */
+        Vector3 P = points[0].toVector3(),
                 Q = points[1].toVector3(),
                 R = points[2].toVector3();
 
@@ -155,7 +153,7 @@ public class Tube : MonoBehaviour {
             GameObject tubeCircle = Instantiate(CircleFab, Vector3.zero, Quaternion.identity) as GameObject;
             Circle circle = tubeCircle.GetComponent<Circle>();
             circle.draw(Vector3.Cross(rVector, pVector).normalized, rVector.normalized, point.toVector3());
-
+            Vector3[] TubeCircleVertices = circle.get();
             j++;
             previous++;
         }

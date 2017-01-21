@@ -11,17 +11,17 @@ public class PathOnS2 {
         //increment index by 2 to avoid dividing pi by 0 or 1.
         float theta_scale = .11f;
         int i = 0;
-        float sizeValue = ((2f* Mathf.PI) / theta_scale);
+        float sizeValue = ((2f*( Mathf.PI)) / theta_scale);
         int size = (int)sizeValue;
         float phi = (Mathf.PI / index);
 
         for (float theta = 0f; i < size; theta += theta_scale) {
-            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,phi, theta);
+            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,theta, phi);
             Points.Add(SphereCoordinate);
             i++;
         }
-               
-         
+
+
         /*  SPIRAL ON S2
         float sizeVal = 1 / .6f;
         int size = (int)sizeVal;

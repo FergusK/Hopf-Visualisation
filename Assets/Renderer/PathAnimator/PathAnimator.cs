@@ -16,7 +16,7 @@ public class PathAnimator : MonoBehaviour {
         Layers = new List<PathOnS2>();
         HopfLayers = new List<List<Fibre>>();
         HF = new List<List<Tube>>();
-        noOfLayers = 1;
+        noOfLayers = 3;
 
         //transform.Translate(0, 0, Time.deltaTime * 1);
 
@@ -45,7 +45,7 @@ public class PathAnimator : MonoBehaviour {
 
             foreach (Fibre fibre in layer)
             {
-                GameObject tube = Instantiate(TubeFab, Vector3.zero, Quaternion.identity) as GameObject;                
+                GameObject tube = Instantiate(TubeFab, Vector3.zero, Quaternion.identity) as GameObject;
                 Tube t = tube.GetComponent<Tube>();
                 t.draw(fibre.project());
                 LayerOfTubes.Add(t);

@@ -8,11 +8,12 @@ public class Circle : MonoBehaviour {
 
     Vector3[] tubeCircle;
     bool drawn = false;
+    int ve = -1;
 
         // Use this for initialization
     void Start () {
     }
-	
+
 	// Update is called once per frame
 	public void draw (Vector3 p1, Vector3 p2, Vector3 centre)
     {
@@ -34,26 +35,38 @@ public class Circle : MonoBehaviour {
             //lr.SetPosition(i, centre + (p1 * 0.01f * Mathf.Cos(Theta)) + (p2 * 0.01f * Mathf.Sin(Theta)));
         }
         lr.SetPositions(tubeCircle);
-        drawn = true;        
+        drawn = true;
     }
 
+    public Vector3[] get(){
+        return tubeCircle;
+    }
 
     private void Update()
     {
         if (!drawn) return;
-        rotate();
-        drawRotated();
+        if(!Input.GetKey(KeyCode.F)){
+
+            if(Input.GetKey(KeyCode.Q)){
+                ve = 1;
+            }else if(Input.GetKey(KeyCode.E)){
+                ve = -1;
+            }
+
+            rotate(ve);
+            drawRotated();
+        }
     }
 
-    
+
     private void drawRotated()
     {
         lr.SetPositions(tubeCircle);
     }
-    
-    private void rotate() {
+
+    private void rotate(int ve) {
         Matrix m = new Matrix();
-        m.setRotationY(-Mathf.PI / 50 * 40.0f * Time.deltaTime);
+        m.setRotationY((ve*Mathf.PI / 100) * 2.0f * Time.deltaTime);
 
         for (int i = 0; i < tubeCircle.Length; i++)
         {
