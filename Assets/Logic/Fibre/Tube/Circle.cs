@@ -42,7 +42,7 @@ public class Circle : MonoBehaviour {
         return tubeCircle;
     }
 
-    private void Update()
+    private void Update2()
     {
         if (!drawn) return;
         if(!Input.GetKey(KeyCode.F)){

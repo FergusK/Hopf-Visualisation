@@ -6,7 +6,6 @@ public class PathOnS2 {
     public List<SphericalCoordinate> Points = new List<SphericalCoordinate>();
     public void setPath(float layers, float index) {
         /*
-         * HORIZONTAL CIRCLES ON S2*/
         index+=2;
         //increment index by 2 to avoid dividing pi by 0 or 1.
         float theta_scale = .11f;
@@ -21,8 +20,10 @@ public class PathOnS2 {
             i++;
         }
 
+         * HORIZONTAL CIRCLES ON S2*/
 
         /*  SPIRAL ON S2
+        */
         float sizeVal = 1 / .6f;
         int size = (int)sizeVal;
 
@@ -35,7 +36,6 @@ public class PathOnS2 {
             //_LineDrawer.SetPosition(i, SphereCoordinate.ToCartesian());
             i++;
         }
-        */
     }
 
     public void rotatePath(Matrix4x4 rotationMatrix) {
