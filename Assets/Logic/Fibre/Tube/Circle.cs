@@ -21,7 +21,9 @@ public class Circle : MonoBehaviour {
 
         float ThetaScale = 0.1f;
         float Theta = ThetaScale;
-        int Size = (int)((2f / ThetaScale) + 1f) + 2;
+        
+        float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
+        int Size = (int)sizeValue;
         tubeCircle = new Vector3[Size];
 
         lr.SetVertexCount(Size);
@@ -32,7 +34,7 @@ public class Circle : MonoBehaviour {
         {
             Theta = Theta + (Mathf.PI * ThetaScale);
             tubeCircle[i] = centre + (p1 *.1f* Mathf.Cos(Theta)) + (p2 *.1f* Mathf.Sin(Theta));
-            //lr.SetPosition(i, centre + (p1 * 0.01f * Mathf.Cos(Theta)) + (p2 * 0.01f * Mathf.Sin(Theta)));
+            lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
         }
         lr.SetPositions(tubeCircle);
         drawn = true;

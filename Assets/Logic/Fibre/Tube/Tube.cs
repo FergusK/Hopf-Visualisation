@@ -17,10 +17,16 @@ public class Tube : MonoBehaviour
     MeshFilter filter;
     private Mesh mf;
 
-    Vector3[] verticies;        //verticies
+    public Vector3[] verticies;        //verticies
     int verticiesIndex = 0;
-    int[] triangles;        //triangles
-    Vector2[] normals;      //normals
+    public int[] triangles;        //triangles
+    public Vector2[] normals;      //normals
+
+    private void Awake()
+    {
+        filter = GetComponent<MeshFilter>();
+        mf = filter.mesh;
+    }
 
     public void temp(List<Point3D> points)
     {
@@ -61,27 +67,45 @@ public class Tube : MonoBehaviour
      * fibre better form just using LineRenderer to represent in 3D
      */
 
+    public void draw2(List<Point3D> points)
+    {
+        /*
+        */
+
+        lr = GetComponent<LineRenderer>();
+        lr.SetWidth(0.1f, 0.1f);
+        lr.numPositions = points.Count;
+        lr.SetVertexCount(points.Count);
+        Vector3[] arrt = new Vector3[points.Count];
+        int p = 0;
+        foreach (Point3D point in points)
+        {
+            arrt[p] = point.toVector3();
+            p++;
+        }
+        // SetPoints(arr,,Color.white);
+        lr.SetPositions(arrt);
+    }
+
     public void draw(List<Point3D> points)
     {
         fibreCount = points.Count;
-        filter = GetComponent<MeshFilter>();
-        mf = filter.mesh;
 
-        //lr = GetComponent<LineRenderer>();
-        //lr.SetWidth(0.1f, 0.1f);
-        //lr.SetVertexCount(3);
+
         /*
-        Vector3[] arr = new Vector3[points.Count];
-        int j = 0;
+        lr = GetComponent<LineRenderer>();
+        lr.SetWidth(0.1f, 0.1f);
+        lr.SetVertexCount(3);
+        Vector3[] arrt = new Vector3[points.Count];
+        int p = 0;
         foreach (Point3D point in points)
         {
-            arr[j] = point.toVector3();
-            j++;
+            arrt[p] = point.toVector3();
+            p++;
         }
        // SetPoints(arr,,Color.white);
-        lr.SetPositions(arr);
+        lr.SetPositions(arrt);
         */
-
 
         /**
          * Calculate the centre point of the circle from the points given.
@@ -149,7 +173,8 @@ public class Tube : MonoBehaviour
         int previous = -1;
 
         float ThetaScale = 0.1f;
-        int Size = (int)((2f / ThetaScale) + 1f) + 2;
+        float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
+        int Size = (int)sizeValue;
 
         verticies = new Vector3[points.Count * Size];
         int currentPointIndex = 0;
@@ -199,7 +224,7 @@ public class Tube : MonoBehaviour
         mf.vertices = verticies;
         mf.triangles = triangles;
         mf.RecalculateNormals();
-
+        mf.RecalculateBounds();
 
         /*
         Vector3 MQP = new Vector3((P.x + Q.x) / 2, (P.y + Q.y) / 2, (P.z + Q.z) / 2);
@@ -256,18 +281,28 @@ public class Tube : MonoBehaviour
 
     private void setTriangles()
     {
-        int length = verticies.Length;
-        triangles = new int[((length)*6)-(tubeCount*6*12)];
-
-        for (int i = 0, t = 6; t < verticies.Length-(tubeCount*6*12); i+=6, t++)
+        int length = tubeCount * 40;
+        triangles = new int[tubeCount * 40 * 6];
+        int flag = 0;
+        for (int i = 0, t = tubeCount*2; t < length; i += 6, t++)
         {
-            triangles[i] = t;
-            triangles[i + 1] = tubeCount + t + 1;
-            triangles[i + 2] = tubeCount + t;
-            triangles[i + 3] = t;
-            triangles[i + 4] = t + 1;
-            triangles[i + 5] = tubeCount + t + 1;
+            if (flag == tubeCount - 1)
+            {
+                flag = 0;
+                i -= 6;
+            }
+            else
+            {
+                triangles[i] = t;
+                triangles[i + 1] = tubeCount + t + 1;
+                triangles[i + 2] = tubeCount + t;
+                triangles[i + 3] = t;
+                triangles[i + 4] = t + 1;
+                triangles[i + 5] = tubeCount + t + 1;
+                flag++;
+            }
         }
+
         //print(tubeCount);
 
         /*triangles = new int[(verticies.Length-1)*6];
@@ -307,13 +342,34 @@ public class Tube : MonoBehaviour
 
     }
 
-    private void clear()
+    public void clear()
     {
-
+        mf.Clear();
+        verticies = null;
+        triangles = null;
+        verticiesIndex = 0;
     }
 
-    public void rotate(Matrix4x4 m)
+    private void Update()
     {
+        rotate();
+    }
 
+    public void rotate()
+    {
+        Matrix m = new Matrix();
+        m.setRotationY((Mathf.PI / 100) * 2.0f * Time.deltaTime);
+
+        for (int i = 0; i < verticies.Length; i++)
+        {
+            Point3D p = new Point3D(verticies[i]);
+
+            p.transform(m);
+            verticies[i] = p.toVector3();
+        }
+
+        mf.vertices = verticies;
+        mf.RecalculateBounds();
+        mf.RecalculateNormals();
     }
 }
