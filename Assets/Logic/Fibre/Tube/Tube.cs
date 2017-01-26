@@ -17,8 +17,8 @@ public class Tube : MonoBehaviour
     MeshFilter filter;
     private Mesh mf;
 
-    public Vector3[] verticies;        //verticies
-    int verticiesIndex = 0;
+    public Vector3[] vertices;        //vertices
+    int verticesIndex = 0;
     public int[] triangles;        //triangles
     public Vector2[] normals;      //normals
 
@@ -60,12 +60,7 @@ public class Tube : MonoBehaviour
 
     }
 
-    /**
-     * This draw subroutine will render a mesh in the shape of a tube
-     * given points as an argument. It will draw the mesh relevant to
-     * the points and radius of the fibre, it should help visualise the
-     * fibre better form just using LineRenderer to represent in 3D
-     */
+
 
     public void draw2(List<Point3D> points)
     {
@@ -87,6 +82,12 @@ public class Tube : MonoBehaviour
         lr.SetPositions(arrt);
     }
 
+    /**
+     * This draw call will render a mesh in the shape of a tube
+     * given points as an argument. It will draw the mesh relevant to
+     * the points and radius of the fibre, it should help visualise the
+     * fibre better form just using LineRenderer to represent in 3D
+     */
     public void draw(List<Point3D> points)
     {
         fibreCount = points.Count;
@@ -175,7 +176,7 @@ public class Tube : MonoBehaviour
         float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
         int Size = (int)sizeValue;
 
-        verticies = new Vector3[(points.Count) * Size];
+        vertices = new Vector3[(points.Count) * Size];
         int currentPointIndex = 0;
 
 
@@ -194,9 +195,9 @@ public class Tube : MonoBehaviour
             /*
              * Draw a circle, on a plane relevant to two perpendicular vectors.
              * The circle must be similar to a Villarceu circle in most areas.
-             * Use the circle verticies to colllect points for the Tube Mesh. 
+             * Use the circle vertices to colllect points for the Tube Mesh. 
              **/
-            //tube circle verticies
+            //tube circle vertices
 
             //calculate a vector perpendicular to two vectors; Vector(radius to CurrentPoint), Vector(PreviousPoint to CurrentPoint)
             Vector3 rVector = new Vector3(point.x - centre.x, point.y - centre.y, point.z - centre.z);
@@ -204,14 +205,14 @@ public class Tube : MonoBehaviour
 
             GameObject tubeCircle = Instantiate(CircleFab, Vector3.zero, Quaternion.identity) as GameObject;
 
-            //draw and return verticies for tubeCircle
+            //draw and return vertices for tubeCircle
             Circle circle = tubeCircle.GetComponent<Circle>();
             circle.draw(Vector3.Cross(rVector, pVector).normalized, rVector.normalized, point.toVector3());
 
             Vector3[] TubeCircleVertices = circle.get();
             tubeCount = TubeCircleVertices.Length;
-            //adds the tubeCircle verticies to the array of verticies to create a mesh
-            setVerticies(TubeCircleVertices);
+            //adds the tubeCircle vertices to the array of vertices to create a mesh
+            setvertices(TubeCircleVertices);
 
             //increments
             currentPointIndex++;
@@ -220,12 +221,12 @@ public class Tube : MonoBehaviour
         }
         setTriangles();
 
-        var normals = new Vector3[verticies.Length];
-        for (var i = 0; i < verticies.Length; i++)
+        var normals = new Vector3[vertices.Length];
+        for (var i = 0; i < vertices.Length; i++)
         {
-            normals[i] = verticies[i].normalized;
+            normals[i] = vertices[i].normalized;
         }
-        mf.vertices = verticies;
+        mf.vertices = vertices;
         mf.normals = normals;
         mf.triangles = triangles;
         mf.RecalculateBounds();
@@ -271,15 +272,15 @@ public class Tube : MonoBehaviour
 
     }
 
-    private void setVerticies(Vector3[] arr)
+    private void setvertices(Vector3[] arr)
     {
         int arrIndex = 0;
         for (; arrIndex < arr.Length;)
         {
             //print(arr[arrIndex].ToString());
-            verticies[verticiesIndex] = arr[arrIndex];
+            vertices[verticesIndex] = arr[arrIndex];
             arrIndex++;
-            verticiesIndex++;
+            verticesIndex++;
         }
     }
 
@@ -309,7 +310,7 @@ public class Tube : MonoBehaviour
 
         //print(tubeCount);
 
-        /*triangles = new int[(verticies.Length-1)*6];
+        /*triangles = new int[(vertices.Length-1)*6];
         for (int i = 0; i < triangles.Length-1; i+=4)
         {
             for (int j = 0; j < (tubeCount * 6); j += 6)
@@ -349,9 +350,9 @@ public class Tube : MonoBehaviour
     public void clear()
     {
         mf.Clear();
-        verticies = null;
+        vertices = null;
         triangles = null;
-        verticiesIndex = 0;
+        verticesIndex = 0;
     }
 
     private void Update()
@@ -360,11 +361,11 @@ public class Tube : MonoBehaviour
         Quaternion newRotation = new Quaternion();
         newRotation.eulerAngles = new Vector3(0, .5f, 0);//the degrees the vertices are to be rotated, for example (0,90,0) 
         this.transform.Rotate(newRotation.eulerAngles);
-        /*for (int i = 0; i < verticies.Length; i++)
+        /*for (int i = 0; i < vertices.Length; i++)
         {//vertices being the array of vertices of your mesh
-            verticies[i] = newRotation * (verticies[i] - center) + center;
+            vertices[i] = newRotation * (vertices[i] - center) + center;
         }
-        mf.vertices = verticies;*/
+        mf.vertices = vertices;*/
     }
 
     public void rotate()
@@ -372,15 +373,15 @@ public class Tube : MonoBehaviour
         Matrix m = new Matrix();
         m.setRotationY((Mathf.PI / 11) * 1.5f * Time.deltaTime);
 
-        for (int i = 0; i < verticies.Length; i++)
+        for (int i = 0; i < vertices.Length; i++)
         {
-            Point3D p = new Point3D(verticies[i]);
+            Point3D p = new Point3D(vertices[i]);
 
             p.transform(m);
-            verticies[i] = p.toVector3();
+            vertices[i] = p.toVector3();
         }
 
-        mf.vertices = verticies;
+        mf.vertices = vertices;
         mf.RecalculateBounds();
     }
 }
