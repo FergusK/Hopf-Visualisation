@@ -18,7 +18,7 @@ public class PathAnimator : MonoBehaviour
         Layers = new List<PathOnS2>();
         HopfLayers = new List<List<Fibre>>();
         HF = new List<List<Tube>>();
-        noOfLayers = 2;
+        noOfLayers = 3;
 
         main();
         //transform.Translate(0, 0, Time.deltaTime * 1);

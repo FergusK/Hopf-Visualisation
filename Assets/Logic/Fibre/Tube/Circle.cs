@@ -17,7 +17,7 @@ public class Circle : MonoBehaviour {
 	// Update is called once per frame
 	public void draw (Vector3 p1, Vector3 p2, Vector3 centre)
     {
-        lr = GetComponent<LineRenderer>();
+        //lr = GetComponent<LineRenderer>();
 
         float ThetaScale = 0.1f;
         float Theta = ThetaScale;
@@ -26,17 +26,17 @@ public class Circle : MonoBehaviour {
         int Size = (int)sizeValue;
         tubeCircle = new Vector3[Size];
 
-        lr.SetVertexCount(Size);
-        lr.numPositions = Size;
-        lr.SetWidth(0.01f, 0.01f);
+        //lr.SetVertexCount(Size);
+        //lr.numPositions = Size;
+        //lr.SetWidth(0.01f, 0.01f);
 
         for (int i = 0; i < Size; i++)
         {
             Theta = Theta + (Mathf.PI * ThetaScale);
             tubeCircle[i] = centre + (p1 *.1f* Mathf.Cos(Theta)) + (p2 *.1f* Mathf.Sin(Theta));
-            lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
+            //lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
         }
-        lr.SetPositions(tubeCircle);
+        //lr.SetPositions(tubeCircle);
         drawn = true;
     }
 

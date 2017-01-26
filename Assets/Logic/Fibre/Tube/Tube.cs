@@ -91,7 +91,6 @@ public class Tube : MonoBehaviour
     {
         fibreCount = points.Count;
 
-
         /*
         lr = GetComponent<LineRenderer>();
         lr.SetWidth(0.1f, 0.1f);
@@ -176,7 +175,7 @@ public class Tube : MonoBehaviour
         float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
         int Size = (int)sizeValue;
 
-        verticies = new Vector3[points.Count * Size];
+        verticies = new Vector3[(points.Count) * Size];
         int currentPointIndex = 0;
 
 
@@ -221,9 +220,14 @@ public class Tube : MonoBehaviour
         }
         setTriangles();
 
+        var normals = new Vector3[verticies.Length];
+        for (var i = 0; i < verticies.Length; i++)
+        {
+            normals[i] = verticies[i].normalized;
+        }
         mf.vertices = verticies;
+        mf.normals = normals;
         mf.triangles = triangles;
-        mf.RecalculateNormals();
         mf.RecalculateBounds();
 
         /*
@@ -281,10 +285,10 @@ public class Tube : MonoBehaviour
 
     private void setTriangles()
     {
-        int length = tubeCount * 40;
-        triangles = new int[tubeCount * 40 * 6];
+        int length = tubeCount * (fibreCount -1);
+        triangles = new int[length * 6];
         int flag = 0;
-        for (int i = 0, t = tubeCount*2; t < length; i += 6, t++)
+        for (int i = 0, t = 0; t < length; i += 6, t++)
         {
             if (flag == tubeCount - 1)
             {
@@ -352,13 +356,21 @@ public class Tube : MonoBehaviour
 
     private void Update()
     {
-        rotate();
+        Vector3 center = new Vector3(0, 0, 0);//any V3 you want as the pivot point.
+        Quaternion newRotation = new Quaternion();
+        newRotation.eulerAngles = new Vector3(0, .5f, 0);//the degrees the vertices are to be rotated, for example (0,90,0) 
+        this.transform.Rotate(newRotation.eulerAngles);
+        /*for (int i = 0; i < verticies.Length; i++)
+        {//vertices being the array of vertices of your mesh
+            verticies[i] = newRotation * (verticies[i] - center) + center;
+        }
+        mf.vertices = verticies;*/
     }
 
     public void rotate()
     {
         Matrix m = new Matrix();
-        m.setRotationY((Mathf.PI / 100) * 2.0f * Time.deltaTime);
+        m.setRotationY((Mathf.PI / 11) * 1.5f * Time.deltaTime);
 
         for (int i = 0; i < verticies.Length; i++)
         {
@@ -370,6 +382,5 @@ public class Tube : MonoBehaviour
 
         mf.vertices = verticies;
         mf.RecalculateBounds();
-        mf.RecalculateNormals();
     }
 }

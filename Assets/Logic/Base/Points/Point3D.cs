@@ -74,7 +74,7 @@ public class Point3D {
         //this method returns a list of points on R4 for the circle on the S3 sphere.
 
         List<Point4D> UnitQuaternions = new List<Point4D>();
-        float omega_scale = .08f;
+        float omega_scale = .01f;
         float sizeValue = ((2f * Mathf.PI) / omega_scale);
         float size = (int)sizeValue;
         int i = 0;

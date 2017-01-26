@@ -5,9 +5,9 @@ using System.Collections.Generic;
 public class PathOnS2 {
     public List<SphericalCoordinate> Points = new List<SphericalCoordinate>();
     public void setPath(float layers, float index) {
-        /*
-
-         * HORIZONTAL CIRCLES ON S2*/
+        
+         /*
+* HORIZONTAL CIRCLES ON S2*/
         index+=2;
         //increment index by 2 to avoid dividing pi by 0 or 1.
         float theta_scale = .11f;
@@ -17,13 +17,13 @@ public class PathOnS2 {
         float phi = (Mathf.PI / index);
 
         for (float theta = 0f; i < size; theta += theta_scale) {
-            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,theta, phi);
+            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,phi, theta);
             Points.Add(SphereCoordinate);
             i++;
         }
 
         /*  SPIRAL ON S2
-        float sizeVal = 1 / .6f;
+        float sizeVal = 1 / .06f;
         int size = (int)sizeVal;
 
         int i = 0;
