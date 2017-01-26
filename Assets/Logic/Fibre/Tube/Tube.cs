@@ -7,7 +7,6 @@ using System;
 [RequireComponent(typeof(MeshFilter))]
 public class Tube : MonoBehaviour
 {
-
     LineRenderer lr;
     public GameObject CircleFab;
     float tubeRadius;
@@ -357,7 +356,7 @@ public class Tube : MonoBehaviour
 
     private void Update()
     {
-        Vector3 center = new Vector3(0, 0, 0);//any V3 you want as the pivot point.
+        
         Quaternion newRotation = new Quaternion();
         newRotation.eulerAngles = new Vector3(0, .5f, 0);//the degrees the vertices are to be rotated, for example (0,90,0) 
         this.transform.Rotate(newRotation.eulerAngles);
@@ -368,7 +367,7 @@ public class Tube : MonoBehaviour
         mf.vertices = vertices;*/
     }
 
-    public void rotate()
+    /*public void rotate()
     {
         Matrix m = new Matrix();
         m.setRotationY((Mathf.PI / 11) * 1.5f * Time.deltaTime);
@@ -383,5 +382,5 @@ public class Tube : MonoBehaviour
 
         mf.vertices = vertices;
         mf.RecalculateBounds();
-    }
+    }*/
 }
