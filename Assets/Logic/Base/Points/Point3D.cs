@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Point3D {
 
     public float x, y, z;
+    public float Latitude, Longitude;
 
 
     public Point3D() { }
@@ -46,7 +47,10 @@ public class Point3D {
     }
 
     public Fibre toFibre() {
-        return new Fibre(GetUnitQuaternionVectors(this));
+        Fibre f = new Fibre(GetUnitQuaternionVectors(this));
+        f.Latitude = Latitude;
+        f.Longitude = Longitude;
+        return f;
     }
 
     public SphericalCoordinate CartesianToSpherical()

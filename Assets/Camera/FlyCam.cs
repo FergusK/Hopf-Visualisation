@@ -20,17 +20,21 @@ public class FlyCam : MonoBehaviour {
     int calls = 0;
 	
 	// Use this for initialization
-	void Start () { 
+	void Start ()
+    {
+        transform.position = new Vector3(0, 0, 0);
+        transform.Translate(0, 0, 0);
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        //if (calls<200)
-        //{
-        //    transform.Translate(new Vector3(0, 0, -1) * speed * Time.deltaTime);
-        //    calls++;
-        //}
+        if (calls<200)
+        {
+            transform.Translate(new Vector3(0, 0, -1) * speed * Time.deltaTime);
+            calls++;
+            return;
+        }
         // Mouse Look
         lastMouse = Input.mousePosition - lastMouse;
 		if ( ! inverted ) lastMouse.y = -lastMouse.y;

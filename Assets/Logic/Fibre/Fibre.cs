@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Fibre {
     private List<Point4D> fibrePoints;
+    public float Latitude, Longitude;
 
     public Fibre(List<Point4D> fibrePoints) {
         this.fibrePoints = fibrePoints;
@@ -11,7 +12,10 @@ public class Fibre {
     public List<Point3D> project() {
         List<Point3D> projectedFibre = new List<Point3D>();
         foreach (Point4D point in fibrePoints) {
-            projectedFibre.Add(point.project());
+            Point3D p = point.project();
+            p.Latitude = Latitude;
+            p.Longitude = Longitude;
+            projectedFibre.Add(p);
         }
         return projectedFibre;
     }

@@ -17,19 +17,20 @@ public class PathOnS2 {
         float phi = (Mathf.PI / index);
 
         for (float theta = 0f; i < size; theta += theta_scale) {
-            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,phi, theta);
+            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,theta, phi);
+
             Points.Add(SphereCoordinate);
             i++;
         }
 
         /*  SPIRAL ON S2
-        float sizeVal = 1 / .06f;
+        float sizeVal = 1 / .02f;
         int size = (int)sizeVal;
 
         int i = 0;
 
 
-        for (float t = .0f; t < 1; t += .06f)
+        for (float t = .02f; t < 1-0.02f; t += .02f)
         {
             Points.Add(new SphericalCoordinate(1, t * layers * 2 * Mathf.PI, t * Mathf.PI));
             //_LineDrawer.SetPosition(i, SphereCoordinate.ToCartesian());

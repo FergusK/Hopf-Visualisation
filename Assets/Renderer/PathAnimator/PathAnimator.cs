@@ -24,6 +24,13 @@ public class PathAnimator : MonoBehaviour
         //transform.Translate(0, 0, Time.deltaTime * 1);
     }
 
+    void main()
+    {
+        Base();
+        Fibration();
+        Projection();
+    }
+
     void Base()
     {
         #region Base
@@ -99,13 +106,6 @@ public class PathAnimator : MonoBehaviour
 
         }*/
         #endregion
-    }
-
-    void main()
-    {
-        Base();
-        Fibration();
-        Projection();
     }
 
     void rotateBase(float ve)

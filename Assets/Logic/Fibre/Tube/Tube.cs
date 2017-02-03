@@ -89,6 +89,9 @@ public class Tube : MonoBehaviour
      */
     public void draw(List<Point3D> points)
     {
+        MeshRenderer rend = GetComponent<MeshRenderer>();
+        rend.material = rend.materials[0];
+        rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1); ;
         fibreCount = points.Count;
 
         /*
@@ -228,6 +231,17 @@ public class Tube : MonoBehaviour
         mf.vertices = vertices;
         mf.normals = normals;
         mf.triangles = triangles;
+        
+        // create new colors array where the colors will be created.
+        Color[] colors = new Color[vertices.Length];
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            colors[i] = Color.Lerp(Color.red, Color.green, vertices[i].y);
+        }
+        // assign the array of colors to the Mesh.
+        mf.colors = colors;
+
         mf.RecalculateBounds();
 
         /*
