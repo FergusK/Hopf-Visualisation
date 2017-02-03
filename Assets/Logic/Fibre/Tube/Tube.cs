@@ -91,6 +91,7 @@ public class Tube : MonoBehaviour
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material = rend.materials[0];
+        print(points[0].Longitude);
         rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1); ;
         fibreCount = points.Count;
 

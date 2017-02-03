@@ -18,6 +18,8 @@ public class PathOnS2 {
 
         for (float theta = 0f; i < size; theta += theta_scale) {
             SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1,theta, phi);
+            SphereCoordinate.Latitude = theta/10;
+            SphereCoordinate.Longitude = phi;
 
             Points.Add(SphereCoordinate);
             i++;
