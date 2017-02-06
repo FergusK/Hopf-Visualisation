@@ -7,6 +7,7 @@ public class Circle : MonoBehaviour {
     LineRenderer lr;
 
     Vector3[] tubeCircle;
+    Vector3[] colliderCircle;
     bool drawn = false;
     int ve = -1;
 
@@ -33,15 +34,41 @@ public class Circle : MonoBehaviour {
         for (int i = 0; i < Size; i++)
         {
             Theta = Theta + (Mathf.PI * ThetaScale);
-            tubeCircle[i] = centre + (p1 *.1f* Mathf.Cos(Theta)) + (p2 *.1f* Mathf.Sin(Theta));
+            tubeCircle[i] = centre + (p1 *.4f* Mathf.Cos(Theta)) + (p2 *.4f* Mathf.Sin(Theta));
             //lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
         }
         //lr.SetPositions(tubeCircle);
         drawn = true;
     }
 
+    public void drawCollider(Vector3 p1, Vector3 p2, Vector3 centre)
+    {
+        //lr = GetComponent<LineRenderer>();
+
+        float ThetaScale = Mathf.PI/4;
+        float Theta = ThetaScale;
+        int Size = 3;
+
+        colliderCircle = new Vector3[Size];
+
+        //lr.SetVertexCount(Size);
+        //lr.numPositions = Size;
+        //lr.SetWidth(0.01f, 0.01f);
+
+        for (int i = 0; i < Size; i++)
+        {
+            Theta = Theta + ThetaScale;
+            colliderCircle[i] = centre + (p1 * .8f * Mathf.Cos(Theta)) + (p2 * .8f * Mathf.Sin(Theta));
+        }
+    }
+
     public Vector3[] get(){
         return tubeCircle;
+    }
+
+    public Vector3[] getCollider()
+    {
+        return colliderCircle;
     }
 
     private void Update2()

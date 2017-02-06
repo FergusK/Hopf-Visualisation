@@ -7,6 +7,8 @@ using System;
 [RequireComponent(typeof(MeshFilter))]
 public class Tube : MonoBehaviour
 {
+    public List<Point3D> Points;
+
     LineRenderer lr;
     public GameObject CircleFab;
     float tubeRadius;
@@ -15,16 +17,25 @@ public class Tube : MonoBehaviour
     //Mesh properties
     MeshFilter filter;
     private Mesh mf;
-
     public Vector3[] vertices;        //vertices
     int verticesIndex = 0;
     public int[] triangles;        //triangles
     public Vector2[] normals;      //normals
 
+    //Collider Mesh properties
+    private MeshCollider mc;
+    private Mesh colliderMesh;
+    Vector3[] colVertices;
+    int colliderVerticesIndex = 0;
+    int[] colliderTriangles;
+    int colliderTubeCount;
+
     private void Awake()
     {
         filter = GetComponent<MeshFilter>();
         mf = filter.mesh;
+        mc = GetComponent<MeshCollider>();
+        colliderMesh = new Mesh();
     }
 
     public void temp(List<Point3D> points)
@@ -59,8 +70,6 @@ public class Tube : MonoBehaviour
 
     }
 
-
-
     public void draw2(List<Point3D> points)
     {
         /*
@@ -89,10 +98,12 @@ public class Tube : MonoBehaviour
      */
     public void draw(List<Point3D> points)
     {
+        points.Add(points[1]);
+        Points = points;
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material = rend.materials[0];
-        print(points[0].Longitude);
-        rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1); ;
+        //print(points[0].Longitude);
+        rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1);
         fibreCount = points.Count;
 
         /*
@@ -172,6 +183,7 @@ public class Tube : MonoBehaviour
         //Vector3[] TD = new Vector3[points.Count];
         List<Vector3> arr = Point3D.toVector3List(points);
 
+        //initalise Mesh variables
         int j = 0;
         int previous = -1;
 
@@ -182,6 +194,11 @@ public class Tube : MonoBehaviour
         vertices = new Vector3[(points.Count) * Size];
         int currentPointIndex = 0;
 
+
+        //Initialise Collider Mesh variables
+        int colSize = 5;
+        colVertices = new Vector3[points.Count*colSize];
+        
 
         foreach (Point3D point in points)
         {
@@ -200,6 +217,7 @@ public class Tube : MonoBehaviour
              * The circle must be similar to a Villarceu circle in most areas.
              * Use the circle vertices to colllect points for the Tube Mesh. 
              **/
+
             //tube circle vertices
 
             //calculate a vector perpendicular to two vectors; Vector(radius to CurrentPoint), Vector(PreviousPoint to CurrentPoint)
@@ -217,11 +235,19 @@ public class Tube : MonoBehaviour
             //adds the tubeCircle vertices to the array of vertices to create a mesh
             setvertices(TubeCircleVertices);
 
+            //Collider Mesh
+            circle.drawCollider(Vector3.Cross(rVector, pVector).normalized, rVector.normalized, point.toVector3());
+            Vector3[] colliderCircleVertices = circle.getCollider();
+            setColliderVertices(colliderCircleVertices);
+            colliderTubeCount = colliderCircleVertices.Length;
+
             //increments
             currentPointIndex++;
             j++;
             previous++;
         }
+
+        //Set mesh values
         setTriangles();
 
         var normals = new Vector3[vertices.Length];
@@ -242,8 +268,25 @@ public class Tube : MonoBehaviour
         }
         // assign the array of colors to the Mesh.
         mf.colors = colors;
-
         mf.RecalculateBounds();
+
+
+        //Set collider mesh values
+        //mc.inflateMesh = true;
+        setColliderTriangles();
+
+        var ColliderNormals = new Vector3[colVertices.Length];
+        for (var i = 0; i < colVertices.Length; i++)
+        {
+            ColliderNormals[i] = colVertices[i].normalized;
+        }
+
+        colliderMesh.vertices = colVertices;
+        colliderMesh.triangles = colliderTriangles;
+        colliderMesh.normals = ColliderNormals;
+
+        mc.sharedMesh = colliderMesh;
+
 
         /*
         Vector3 MQP = new Vector3((P.x + Q.x) / 2, (P.y + Q.y) / 2, (P.z + Q.z) / 2);
@@ -361,12 +404,62 @@ public class Tube : MonoBehaviour
 
     }
 
+    public void setColliderVertices(Vector3[] arr) {
+        int arrIndex = 0;
+        for (; arrIndex < arr.Length;)
+        {
+            //print(arr[arrIndex].ToString());
+            colVertices[colliderVerticesIndex] = arr[arrIndex];
+            arrIndex++;
+            colliderVerticesIndex++;
+        }
+    }
+
+    public void setColliderTriangles() {
+        
+
+            int length = colliderTubeCount * (fibreCount - 1);
+        colliderTriangles = new int[length * 6];
+        int flag = 0;
+        for (int i = 0, t = 0; t < length; i += 6, t++)
+        {
+            if (flag == colliderTubeCount - 1)
+            {
+                flag = 0;
+                i -= 6;
+            }
+            else
+            {
+                colliderTriangles[i] = t;
+                colliderTriangles[i + 1] = colliderTubeCount + t + 1;
+                colliderTriangles[i + 2] = colliderTubeCount + t;
+                colliderTriangles[i + 3] = t;
+                colliderTriangles[i + 4] = t + 1;
+                colliderTriangles[i + 5] = colliderTubeCount + t + 1;
+                flag++;
+            }
+        }
+
+    }
+
     public void clear()
     {
         mf.Clear();
         vertices = null;
         triangles = null;
         verticesIndex = 0;
+
+        colliderVerticesIndex = 0;
+
+    }
+
+    public void ColorClick(int index) {
+        MeshRenderer rend = GetComponent<MeshRenderer>();
+        rend.material = rend.materials[0];
+
+        float w = (Points[index].quaternionVector.w + 1) / 2;
+        //print(points[0].Longitude);
+        rend.material.color = Color.HSVToRGB(w, 1, 1);
     }
 
     private void Update()

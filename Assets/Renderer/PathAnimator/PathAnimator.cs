@@ -18,7 +18,7 @@ public class PathAnimator : MonoBehaviour
         Layers = new List<PathOnS2>();
         HopfLayers = new List<List<Fibre>>();
         HF = new List<List<Tube>>();
-        noOfLayers = 3;
+        noOfLayers = 1;
 
         main();
         //transform.Translate(0, 0, Time.deltaTime * 1);
@@ -37,9 +37,20 @@ public class PathAnimator : MonoBehaviour
         for (int i = 0; i < noOfLayers; i++)
         {
             PathOnS2 path = new PathOnS2();
-            path.setPath(noOfLayers, i);
+            path.SpiralPath(noOfLayers, i);
+
             Layers.Add(path);
         }
+        //PathOnS2 path3 = new PathOnS2();
+        //path.CirclePath(noOfLayers, 2);
+
+        //Layers.Add(path3);
+
+        //PathOnS2 path2 = new PathOnS2();
+        //path.SpiralPath(noOfLayers, 2);
+
+        //Layers.Add(path2);
+        //}
 
         #endregion
     }
@@ -74,37 +85,37 @@ public class PathAnimator : MonoBehaviour
                 HF.Add(LayerOfTubes);
             }
         }
-            /*
-        else
+        /*
+    else
+    {
+        for (int i = 0; i < HF.Count; i++)
         {
-            for (int i = 0; i < HF.Count; i++)
+            //every layer in hf
+
+            for (int j = 0; j < HF[i].Count; j++)
             {
-                //every layer in hf
-
-                for (int j = 0; j < HF[i].Count; j++)
-                {
-                    //every fibre in hf
-                    HF[i][j].clear();
-                    HF[i][j].draw(HopfLayers[i][j].project());
-                    //Debug.Log("debug 1");
-                }
+                //every fibre in hf
+                HF[i][j].clear();
+                HF[i][j].draw(HopfLayers[i][j].project());
+                //Debug.Log("debug 1");
             }
+        }
 
-            int j = 0;
-            foreach (List<Fibre> layer in HopfLayers)
+        int j = 0;
+        foreach (List<Fibre> layer in HopfLayers)
+        {
+            int i = 0;
+            foreach (Fibre fibre in layer)
             {
-                int i = 0;
-                foreach (Fibre fibre in layer)
-                {
-                    //Destroy(HF[j][i].gameObject);
-                    HF[j][i].clear();
-                    HF[j][i].draw(fibre.project());
-                    i++;
-                }
-                j++;
+                //Destroy(HF[j][i].gameObject);
+                HF[j][i].clear();
+                HF[j][i].draw(fibre.project());
+                i++;
             }
+            j++;
+        }
 
-        }*/
+    }*/
         #endregion
     }
 

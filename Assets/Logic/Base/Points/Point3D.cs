@@ -7,6 +7,7 @@ public class Point3D {
     public float x, y, z;
     public float Latitude, Longitude;
 
+    public Vector4 quaternionVector;
 
     public Point3D() { }
 
