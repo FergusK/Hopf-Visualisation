@@ -101,7 +101,7 @@ public class Tube : MonoBehaviour
         points.Add(points[1]);
         Points = points;
         MeshRenderer rend = GetComponent<MeshRenderer>();
-        rend.material = rend.materials[0];
+        rend.material.shader = Shader.Find("Custom/StandardShader");
         //print(points[0].Longitude);
         rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1);
         fibreCount = points.Count;
@@ -197,8 +197,8 @@ public class Tube : MonoBehaviour
 
         //Initialise Collider Mesh variables
         int colSize = 5;
-        colVertices = new Vector3[points.Count*colSize];
-        
+        colVertices = new Vector3[points.Count * colSize];
+
 
         foreach (Point3D point in points)
         {
@@ -258,16 +258,20 @@ public class Tube : MonoBehaviour
         mf.vertices = vertices;
         mf.normals = normals;
         mf.triangles = triangles;
-        
+
         // create new colors array where the colors will be created.
+
+        /*
         Color[] colors = new Color[vertices.Length];
 
         for (int i = 0; i < vertices.Length; i++)
         {
             colors[i] = Color.Lerp(Color.red, Color.green, vertices[i].y);
         }
+        */
+
         // assign the array of colors to the Mesh.
-        mf.colors = colors;
+        //mf.colors = colors;
         mf.RecalculateBounds();
 
 
@@ -343,7 +347,7 @@ public class Tube : MonoBehaviour
 
     private void setTriangles()
     {
-        int length = tubeCount * (fibreCount -1);
+        int length = tubeCount * (fibreCount - 1);
         triangles = new int[length * 6];
         int flag = 0;
         for (int i = 0, t = 0; t < length; i += 6, t++)
@@ -404,7 +408,8 @@ public class Tube : MonoBehaviour
 
     }
 
-    public void setColliderVertices(Vector3[] arr) {
+    public void setColliderVertices(Vector3[] arr)
+    {
         int arrIndex = 0;
         for (; arrIndex < arr.Length;)
         {
@@ -415,10 +420,11 @@ public class Tube : MonoBehaviour
         }
     }
 
-    public void setColliderTriangles() {
-        
+    public void setColliderTriangles()
+    {
 
-            int length = colliderTubeCount * (fibreCount - 1);
+
+        int length = colliderTubeCount * (fibreCount - 1);
         colliderTriangles = new int[length * 6];
         int flag = 0;
         for (int i = 0, t = 0; t < length; i += 6, t++)
@@ -453,7 +459,8 @@ public class Tube : MonoBehaviour
 
     }
 
-    public void ColorClick(int index) {
+    public void ColorClick(int index)
+    {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material = rend.materials[0];
 
@@ -462,17 +469,79 @@ public class Tube : MonoBehaviour
         rend.material.color = Color.HSVToRGB(w, 1, 1);
     }
 
+    public void ColorDistanceClick(Vector4 Q)
+    {
+
+        Color[] colours = new Color[vertices.Length];
+        int j = 0;
+        foreach (Point3D p in Points) {
+            for (int i = 0; i < tubeCount; i++) {
+                Vector4 P = p.quaternionVector;
+                float d_PQ = (2*Mathf.Acos(Mathf.Abs(Vector4.Dot(P, Q))))/(Mathf.PI);
+
+                colours[j+i] = Color.HSVToRGB(d_PQ, 1, 1);
+            }
+            j += tubeCount;
+        }
+        mf.colors = colours;
+    }
+
     private void Update()
     {
-        
+
         Quaternion newRotation = new Quaternion();
-        newRotation.eulerAngles = new Vector3(0, .5f, 0);//the degrees the vertices are to be rotated, for example (0,90,0) 
+        newRotation.eulerAngles = new Vector3(0, .5f, 0);  //the degrees the vertices are to be rotated, for example (0,90,0) 
         this.transform.Rotate(newRotation.eulerAngles);
-        /*for (int i = 0; i < vertices.Length; i++)
-        {//vertices being the array of vertices of your mesh
-            vertices[i] = newRotation * (vertices[i] - center) + center;
+
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Debug.Log(
+                    "Mouse Down Hit the following object: " +
+                    hit.collider.name + " Index : " + hit.triangleIndex/6 +
+                    " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / 6].quaternionVector.ToString() +
+                    " Collision point : " + hit.point
+                    );
+                //hit.collider.gameObject.GetComponent<Tube>().ColorClick((hit.triangleIndex) / 3);
+
+                //Distance
+                int index = hit.triangleIndex/6;
+                Vector4 Q = hit.collider.gameObject.GetComponent<Tube>().Points[index].quaternionVector;
+
+
+
+                ColorDistanceClick(Q);
+
+                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+
+            }
+            else if (Input.GetMouseButtonDown(2))
+            {
+                Debug.Log(
+                            "Mouse Down Hit the following object: " +
+                            hit.collider.name + " Index : " + hit.triangleIndex +
+                            " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / 3].quaternionVector.ToString()
+                         );
+
+                int index = hit.triangleIndex;
+
+                ColorClick(index);
+
+                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+
+            }
+            else
+            {
+
+                Debug.Log("Nothing was hit!");
+                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+
+            }
         }
-        mf.vertices = vertices;*/
     }
 
     /*public void rotate()

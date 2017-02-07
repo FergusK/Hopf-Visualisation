@@ -18,7 +18,7 @@ public class PathAnimator : MonoBehaviour
         Layers = new List<PathOnS2>();
         HopfLayers = new List<List<Fibre>>();
         HF = new List<List<Tube>>();
-        noOfLayers = 1;
+        noOfLayers = 3;
 
         main();
         //transform.Translate(0, 0, Time.deltaTime * 1);
@@ -37,11 +37,11 @@ public class PathAnimator : MonoBehaviour
         for (int i = 0; i < noOfLayers; i++)
         {
             PathOnS2 path = new PathOnS2();
-            path.SpiralPath(noOfLayers, i);
+            path.CirclePath(i);
 
             Layers.Add(path);
         }
-        //PathOnS2 path3 = new PathOnS2();
+        PathOnS2 path3 = new PathOnS2();
         //path.CirclePath(noOfLayers, 2);
 
         //Layers.Add(path3);

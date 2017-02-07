@@ -79,3 +79,8 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+/test2_Data
+/test3_Data
+/test4_Data
+/test_Data
+/test.exe

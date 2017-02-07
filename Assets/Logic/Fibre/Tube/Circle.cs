@@ -45,9 +45,9 @@ public class Circle : MonoBehaviour {
     {
         //lr = GetComponent<LineRenderer>();
 
-        float ThetaScale = Mathf.PI/4;
+        float ThetaScale = Mathf.PI/5;
         float Theta = ThetaScale;
-        int Size = 3;
+        int Size = 5;
 
         colliderCircle = new Vector3[Size];
 
