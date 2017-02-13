@@ -34,7 +34,7 @@ public class Circle : MonoBehaviour {
         for (int i = 0; i < Size; i++)
         {
             Theta = Theta + (Mathf.PI * ThetaScale);
-            tubeCircle[i] = centre + (p1 *.4f* Mathf.Cos(Theta)) + (p2 *.4f* Mathf.Sin(Theta));
+            tubeCircle[i] = centre + (p1 *.5f* Mathf.Cos(Theta)) + (p2 *.5f* Mathf.Sin(Theta));
             //lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
         }
         //lr.SetPositions(tubeCircle);
@@ -47,7 +47,7 @@ public class Circle : MonoBehaviour {
 
         float ThetaScale = Mathf.PI/5;
         float Theta = ThetaScale;
-        int Size = 5;
+        int Size = 11;
 
         colliderCircle = new Vector3[Size];
 

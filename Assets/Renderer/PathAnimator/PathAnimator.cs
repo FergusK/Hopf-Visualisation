@@ -34,22 +34,41 @@ public class PathAnimator : MonoBehaviour
     void Base()
     {
         #region Base
-        for (int i = 0; i < noOfLayers; i++)
-        {
-            PathOnS2 path = new PathOnS2();
-            path.CirclePath(i);
+        //for (int i = 0; i < noOfLayers; i++)
+        //{
+        //    PathOnS2 path = new PathOnS2();
+        //    path.CirclePath(i);
 
-            Layers.Add(path);
-        }
-        PathOnS2 path3 = new PathOnS2();
-        //path.CirclePath(noOfLayers, 2);
+        //    Layers.Add(path);
+        //}
+        //PathOnS2 path3 = new PathOnS2();
+        //path3.CirclePath(0.4f);
 
         //Layers.Add(path3);
+        /*
+        PathOnS2 path2 = new PathOnS2();
+        path2.CirclePath(1.1f, 0.11f);
 
-        //PathOnS2 path2 = new PathOnS2();
-        //path.SpiralPath(noOfLayers, 2);
+        Layers.Add(path2);
 
-        //Layers.Add(path2);
+        PathOnS2 path3 = new PathOnS2();
+        path3.CirclePath(1.8f, 0.1f);
+
+        Layers.Add(path3);
+
+        PathOnS2 path4 = new PathOnS2();
+        path4.CirclePathVertical(1.1f, 0.1f);
+
+        Layers.Add(path4);*/
+
+        PathOnS2 path2 = new PathOnS2();
+        path2.CirclePath(Mathf.PI/3, Mathf.PI / 30);
+
+        Layers.Add(path2);
+        PathOnS2 path = new PathOnS2();
+        path.CirclePath(Mathf.PI / 4, Mathf.PI/30);
+
+        Layers.Add(path);
         //}
 
         #endregion

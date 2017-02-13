@@ -9,6 +9,12 @@ public class Tube : MonoBehaviour
 {
     public List<Point3D> Points;
 
+    //tube rotation
+    public bool rotate;
+    public int direction;
+    public Vector3 axis;
+
+    //rendering
     LineRenderer lr;
     public GameObject CircleFab;
     float tubeRadius;
@@ -66,8 +72,6 @@ public class Tube : MonoBehaviour
             Theta = Theta + (Mathf.PI * ThetaScale);
             lr.SetPosition(i, c + (a * 1 * Mathf.Cos(Theta)) + (b * 1 * Mathf.Sin(Theta)));
         }
-
-
     }
 
     public void draw2(List<Point3D> points)
@@ -100,12 +104,7 @@ public class Tube : MonoBehaviour
     {
         points.Add(points[1]);
         Points = points;
-        MeshRenderer rend = GetComponent<MeshRenderer>();
-        rend.material.shader = Shader.Find("Custom/StandardShader");
-        //print(points[0].Longitude);
-        rend.material.color = Color.HSVToRGB(points[0].Longitude, 1, 1);
         fibreCount = points.Count;
-
         /*
         lr = GetComponent<LineRenderer>();
         lr.SetWidth(0.1f, 0.1f);
@@ -196,7 +195,7 @@ public class Tube : MonoBehaviour
 
 
         //Initialise Collider Mesh variables
-        int colSize = 5;
+        int colSize = 11;
         colVertices = new Vector3[points.Count * colSize];
 
 
@@ -259,6 +258,7 @@ public class Tube : MonoBehaviour
         mf.normals = normals;
         mf.triangles = triangles;
 
+        ColorQuaternionW();
         // create new colors array where the colors will be created.
 
         /*
@@ -289,6 +289,7 @@ public class Tube : MonoBehaviour
         colliderMesh.triangles = colliderTriangles;
         colliderMesh.normals = ColliderNormals;
 
+        colliderMesh.RecalculateNormals();
         mc.sharedMesh = colliderMesh;
 
 
@@ -459,6 +460,38 @@ public class Tube : MonoBehaviour
 
     }
 
+    public void ColorQuaternionW()
+    {
+        Color[] colours = new Color[vertices.Length];
+        int j = 0;
+        foreach (Point3D p in Points)
+        {
+            for (int i = 0; i < tubeCount; i++)
+            {
+                Vector4 P = p.quaternionVector;
+                colours[j + i] = Color.HSVToRGB(P.w, 1, 1);
+            }
+            j += tubeCount;
+        }
+        mf.colors = colours;
+    }
+
+    public void ColorLatitude()
+    {
+        MeshRenderer rend = GetComponent<MeshRenderer>();
+        rend.material.shader = Shader.Find("Custom/StandardShader");
+        //print(points[0].Longitude);
+        rend.material.color = Color.HSVToRGB(Points[0].Longitude, 1, 1);
+    }
+
+    public void ColorLongitude()
+    {
+        MeshRenderer rend = GetComponent<MeshRenderer>();
+        rend.material.shader = Shader.Find("Custom/StandardShader");
+        //print(points[0].Longitude);
+        rend.material.color = Color.HSVToRGB(Points[0].Latitude, 1, 1);
+    }
+
     public void ColorClick(int index)
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
@@ -474,12 +507,14 @@ public class Tube : MonoBehaviour
 
         Color[] colours = new Color[vertices.Length];
         int j = 0;
-        foreach (Point3D p in Points) {
-            for (int i = 0; i < tubeCount; i++) {
+        foreach (Point3D p in Points)
+        {
+            for (int i = 0; i < tubeCount; i++)
+            {
                 Vector4 P = p.quaternionVector;
-                float d_PQ = (2*Mathf.Acos(Mathf.Abs(Vector4.Dot(P, Q))))/(Mathf.PI);
+                float d_PQ = (2 * Mathf.Acos(Mathf.Abs(Vector4.Dot(P, Q)))) / (Mathf.PI);
 
-                colours[j+i] = Color.HSVToRGB(d_PQ, 1, 1);
+                colours[j + i] = Color.HSVToRGB(d_PQ, 1, 1);
             }
             j += tubeCount;
         }
@@ -502,14 +537,14 @@ public class Tube : MonoBehaviour
             {
                 Debug.Log(
                     "Mouse Down Hit the following object: " +
-                    hit.collider.name + " Index : " + hit.triangleIndex/6 +
-                    " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / 6].quaternionVector.ToString() +
+                    hit.collider.name + " Index : " + (hit.triangleIndex / 6) / 11 +
+                    " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[(hit.triangleIndex / 6)].quaternionVector.ToString() +
                     " Collision point : " + hit.point
                     );
                 //hit.collider.gameObject.GetComponent<Tube>().ColorClick((hit.triangleIndex) / 3);
 
                 //Distance
-                int index = hit.triangleIndex/6;
+                int index = (hit.triangleIndex / 6) / 11;
                 Vector4 Q = hit.collider.gameObject.GetComponent<Tube>().Points[index].quaternionVector;
 
 

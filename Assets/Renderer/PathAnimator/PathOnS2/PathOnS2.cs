@@ -7,21 +7,21 @@ public class PathOnS2
     public List<SphericalCoordinate> Points = new List<SphericalCoordinate>();
     public float rotation;
 
-    public void CirclePath(float index)
+    /*
+     * HORIZONTAL CIRCLES ON S2 
+     * set Points with new values.
+     * Circle path along x axis defined by phi.
+     */
+    public void CirclePath(float phi, float scale, float circleWidth = (2f*Mathf.PI))
     {
-
-        /*
-         * HORIZONTAL CIRCLES ON S2 
-         */
-        index += 2;
-        //increment index by 2 to avoid dividing pi by 0 or 1.
-        float theta_scale = .11f;
+        scale = (scale <= 0.01f) ? (0.01f) : ((scale < Mathf.PI*2) ? (scale) : (Mathf.PI*2));
+        circleWidth = (circleWidth > 2 * Mathf.PI) ? (2 * Mathf.PI) : ((circleWidth < 0) ? (0) : (circleWidth));
+        
         int i = 0;
-        float sizeValue = ((2f * (Mathf.PI)) / theta_scale);
+        float sizeValue = (circleWidth / scale);
         int size = (int)sizeValue;
-        float phi = Mathf.PI / index;
-
-        for (float theta = 0f; i < size; theta += theta_scale)
+        size++;
+        for (float theta = 0f; i < size; theta += scale)
         {
             SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1, theta, phi);
             SphereCoordinate.Latitude = phi / (Mathf.PI);
@@ -30,23 +30,29 @@ public class PathOnS2
             Points.Add(SphereCoordinate);
             i++;
         }
-
-
     }
 
-    public void SpiralPath(float layers, float index)
+    public void CirclePathVertical(float theta, float scale) {
+        CirclePath(theta, scale);
+        Matrix m = new Matrix();
+        m.setRotationX(90);
+        rotatePath(m);
+    }
+
+    public void SpiralPath(int spins, float scale)
     {
+
         /*  SPIRAL ON S2
         */
-        float sizeVal = 1 / .06f;
+        float sizeVal = 1 / scale;
         int size = (int)sizeVal;
 
         int i = 0;
 
 
-        for (float t = .06f; t < 1 - 0.06f; t += .06f)
+        for (float t = scale; t < 1 - scale; t += scale)
         {
-            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1, t * layers * 2 * Mathf.PI, t * Mathf.PI);
+            SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1, t * spins * Mathf.PI, t * Mathf.PI);
             Points.Add(SphereCoordinate);
             //_LineDrawer.SetPosition(i, SphereCoordinate.ToCartesian());
             SphereCoordinate.Latitude = t;
@@ -55,9 +61,18 @@ public class PathOnS2
         }
     }
 
-    public void rotatePath(Matrix4x4 rotationMatrix)
-    {
+    public void SpiralPathVertical(int spins, float scale) {
+        SpiralPath(spins, scale);
+        Matrix m = new Matrix();
+        m.setRotationY(90);
+        rotatePath(m);
+    }
 
+    public void rotatePath(Matrix rotationMatrix)
+    {
+        foreach (Point3D point in Points) {
+            point.transform(rotationMatrix);
+        }
     }
 
     public List<Fibre> Fibration()
