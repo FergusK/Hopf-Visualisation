@@ -11,20 +11,14 @@ public class Circle : MonoBehaviour {
     bool drawn = false;
     int ve = -1;
 
-        // Use this for initialization
-    void Start () {
-    }
-
 	// Update is called once per frame
 	public void draw (Vector3 p1, Vector3 p2, Vector3 centre)
     {
         //lr = GetComponent<LineRenderer>();
 
-        float ThetaScale = 0.1f;
+        float ThetaScale = Settings.ThetaScale;
         float Theta = ThetaScale;
-        
-        float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
-        int Size = (int)sizeValue;
+        int Size = Settings.Size;
         tubeCircle = new Vector3[Size];
 
         //lr.SetVertexCount(Size);
@@ -34,7 +28,7 @@ public class Circle : MonoBehaviour {
         for (int i = 0; i < Size; i++)
         {
             Theta = Theta + (Mathf.PI * ThetaScale);
-            tubeCircle[i] = centre + (p1 *.5f* Mathf.Cos(Theta)) + (p2 *.5f* Mathf.Sin(Theta));
+            tubeCircle[i] = centre + (p1 *Settings.Radius* Mathf.Cos(Theta)) + (p2 * Settings.Radius * Mathf.Sin(Theta));
             //lr.SetPosition(i, centre + (p1 * 0.1f * Mathf.Cos(Theta)) + (p2 * 0.1f * Mathf.Sin(Theta)));
         }
         //lr.SetPositions(tubeCircle);
@@ -45,9 +39,9 @@ public class Circle : MonoBehaviour {
     {
         //lr = GetComponent<LineRenderer>();
 
-        float ThetaScale = Mathf.PI/5;
+        float ThetaScale = Settings.ColliderThetaScale;
         float Theta = ThetaScale;
-        int Size = 11;
+        int Size = Settings.ColliderSize;
 
         colliderCircle = new Vector3[Size];
 
@@ -58,7 +52,7 @@ public class Circle : MonoBehaviour {
         for (int i = 0; i < Size; i++)
         {
             Theta = Theta + ThetaScale;
-            colliderCircle[i] = centre + (p1 * .8f * Mathf.Cos(Theta)) + (p2 * .8f * Mathf.Sin(Theta));
+            colliderCircle[i] = centre + (p1 * (Settings.Radius+.3f) * Mathf.Cos(Theta)) + (p2 * (Settings.Radius+.3f) * Mathf.Sin(Theta));
         }
     }
 

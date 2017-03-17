@@ -10,8 +10,8 @@ public class Tube : MonoBehaviour
     public List<Point3D> Points;
 
     //tube rotation
-    public bool rotate;
-    public int direction;
+    public int rotate;
+    public float rotation_speed;
     public Vector3 axis;
 
     //rendering
@@ -186,9 +186,8 @@ public class Tube : MonoBehaviour
         int j = 0;
         int previous = -1;
 
-        float ThetaScale = 0.1f;
-        float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
-        int Size = (int)sizeValue;
+       
+        int Size = Settings.Size;
 
         vertices = new Vector3[(points.Count) * Size];
         int currentPointIndex = 0;
@@ -258,7 +257,15 @@ public class Tube : MonoBehaviour
         mf.normals = normals;
         mf.triangles = triangles;
 
-        ColorQuaternionW();
+        //Colouring method
+        if (Settings.default_colour.Equals("Latitude")){
+            ColorLatitude();
+        }else if (Settings.default_colour.Equals("Longitude")) {
+            ColorLongitude();
+        }else if (Settings.default_colour.Equals("Quaternion")) {
+            ColorQuaternionW();
+        }
+
         // create new colors array where the colors will be created.
 
         /*
@@ -276,7 +283,6 @@ public class Tube : MonoBehaviour
 
 
         //Set collider mesh values
-        //mc.inflateMesh = true;
         setColliderTriangles();
 
         var ColliderNormals = new Vector3[colVertices.Length];
@@ -291,46 +297,6 @@ public class Tube : MonoBehaviour
 
         colliderMesh.RecalculateNormals();
         mc.sharedMesh = colliderMesh;
-
-
-        /*
-        Vector3 MQP = new Vector3((P.x + Q.x) / 2, (P.y + Q.y) / 2, (P.z + Q.z) / 2);
-        Vector3 MQR = new Vector3((Q.x + R.x) / 2, (Q.y + R.y) / 2, (Q.z + R.z) / 2);
-
-        Vector3 t = Q - P;
-        Vector3 u = R - P;
-        Vector3 v = R - Q;
-
-        Vector3 w = Vector3.Cross(t, u);
-        float mag = w.magnitude;
-
-        if (mag < 10e-14) { print("false"); return; }
-
-        // helpers
-        float iwsl2 = 1.0f / (2.0f * mag);
-        float tt = Vector3.Dot(t, t);
-        float uu = Vector3.Dot(u, u);
-
-        Vector3 circCenter = P + (u * tt * Vector3.Dot(u, v) - t * uu * Vector3.Dot(t, v)) * iwsl2;
-        float circRadius = Mathf.Sqrt(tt * uu * Vector3.Dot(v, v) * iwsl2 * 0.5f);
-
-        //print("X: "+points[0].x + " Y: "+ points[1].y+" Z: "+ points[2].z);
-    //draw circle rotate at angle of point to radius vectorS
-      //centre
-      //X: -7.120542 Y: -0.07194581 Z: -7.120541
-      //points
-      X: -7.121067 Y: -0.07121304 Z: -7.121067
-      X: -7.171061 Y: -0.1434403 Z: -7.171061
-      X: -7.221045 Y: -0.2166963 Z: -7.221045
-
-
-
-        //  and translate to point on fibre
-
-        //collect vertex
-        //create triangles
-        //normals
-        */
 
     }
 
@@ -369,44 +335,7 @@ public class Tube : MonoBehaviour
                 flag++;
             }
         }
-
         //print(tubeCount);
-
-        /*triangles = new int[(vertices.Length-1)*6];
-        for (int i = 0; i < triangles.Length-1; i+=4)
-        {
-            for (int j = 0; j < (tubeCount * 6); j += 6)
-            {
-                triangles[i + j] = i;
-                triangles[i + j + 1] = i + 1 + tubeCount;
-                triangles[i + j + 2] = i + tubeCount;
-
-                triangles[i + j + 3] = i;
-                triangles[i + j + 4] = i + 1;
-                triangles[i + j + 5] = i + tubeCount + 1;
-                /*if (i >= triangles.Length - tubeCount - 1)
-                {
-                    triangles[i + j] = i;
-                    triangles[i + j + 1] = ;
-                    triangles[i + j + 2] = i - triangles.Length;
-
-                    triangles[i + j + 3] = i;
-                    triangles[i + j + 4] = i + 1;
-                    triangles[i + j + 5] = i - triangles.Length + 1;
-                }
-                else
-                {
-                    triangles[i + j] = i;
-                    triangles[i + j + 1] = i + 1 + tubeCount;
-                    triangles[i + j + 2] = i + tubeCount;
-
-                    triangles[i + j + 3] = i;
-                    triangles[i + j + 4] = i + 1;
-                    triangles[i + j + 5] = i + tubeCount + 1;
-                }
-            }
-        }*/
-
     }
 
     public void setColliderVertices(Vector3[] arr)
@@ -521,14 +450,33 @@ public class Tube : MonoBehaviour
         mf.colors = colours;
     }
 
+    public void ColorDotProductClick(Vector4 Q) {
+        Color[] colours = new Color[vertices.Length];
+        int j = 0;
+        foreach (Point3D p in Points) {
+            for (int i = 0; i < tubeCount; i++) {
+                float dot = Vector4.Dot(Q, p.quaternionVector);
+                colours[j + i] = Color.HSVToRGB(dot, 1, 1);
+            }
+            j += tubeCount;
+        }
+        mf.colors = colours;
+    }
+
     private void Update()
     {
-
-        Quaternion newRotation = new Quaternion();
-        newRotation.eulerAngles = new Vector3(0, .5f, 0);  //the degrees the vertices are to be rotated, for example (0,90,0) 
-        this.transform.Rotate(newRotation.eulerAngles);
-
-
+        if (rotate == 1)
+        {
+            Quaternion newRotation = new Quaternion();
+            newRotation.eulerAngles = new Vector3(0, rotation_speed, 0);  //the degrees the vertices are to be rotated, for example (0,90,0) 
+            this.transform.Rotate(newRotation.eulerAngles);
+        }
+        else if (rotate == 2) {
+            Quaternion newRotation = new Quaternion();
+            newRotation.eulerAngles = new Vector3(0, -rotation_speed, 0);  //the degrees the vertices are to be rotated, for example (0,90,0) 
+            this.transform.Rotate(newRotation.eulerAngles);
+        }
+            
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -549,7 +497,19 @@ public class Tube : MonoBehaviour
 
 
 
-                ColorDistanceClick(Q);
+                //Colouring method
+                if (Settings.default_click_colour.Equals("Distance"))
+                {
+                    ColorDistanceClick(Q);
+                }
+                else if (Settings.default_click_colour.Equals("Dot"))
+                {
+                    ColorDotProductClick(Q);
+                }
+                else if (Settings.default_click_colour.Equals("Quaternion"))
+                {
+                    ColorClick(index);
+                }
 
                 Debug.DrawRay(ray.origin, ray.direction, Color.green);
 

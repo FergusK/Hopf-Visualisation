@@ -24,6 +24,4 @@ public class SphericalCoordinate : Point3D
         z = radius * Mathf.Cos(elevation);
         y = radius * Mathf.Sin(polar) * Mathf.Sin(elevation);
     }
-    
-
 }

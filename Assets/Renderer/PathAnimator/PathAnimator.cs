@@ -18,10 +18,9 @@ public class PathAnimator : MonoBehaviour
         Layers = new List<PathOnS2>();
         HopfLayers = new List<List<Fibre>>();
         HF = new List<List<Tube>>();
-        noOfLayers = 3;
+        //noOfLayers = Settings.S2List.Count;
 
         main();
-        //transform.Translate(0, 0, Time.deltaTime * 1);
     }
 
     void main()
@@ -33,6 +32,39 @@ public class PathAnimator : MonoBehaviour
 
     void Base()
     {
+        //get menu information and translate to S2 points
+
+        foreach (S2Input s2layer in Settings.S2List) {
+            PathOnS2 path = new PathOnS2();
+
+            if (s2layer.type.Equals("Circle path")) {
+                if (s2layer.FloatParam3 == 0) {
+                    path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2);
+                }
+                else {
+                    path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
+                }
+
+            } else if (s2layer.type.Equals("Circle path vertical")) {
+                if (s2layer.FloatParam3 == 0) {
+                    path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2);
+                } else {
+                    path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
+                }
+
+            } else if (s2layer.type.Equals("Spiral path")) {
+                path.SpiralPath(s2layer.IntParam1, s2layer.FloatParam2);
+
+            } else if (s2layer.type.Equals("Spiral vertical path")) {
+                path.SpiralPathVertical(s2layer.IntParam1, s2layer.FloatParam2);
+            }
+
+            path.rotate = s2layer.rotate;
+            path.rotation_speed = s2layer.rotation_speed;
+            Layers.Add(path);
+        }
+
+
         #region Base
         //for (int i = 0; i < noOfLayers; i++)
         //{
@@ -62,13 +94,16 @@ public class PathAnimator : MonoBehaviour
         Layers.Add(path4);*/
 
         PathOnS2 path2 = new PathOnS2();
-        path2.CirclePath(Mathf.PI/3, Mathf.PI / 30);
-
+        path2.CirclePath(Mathf.PI/4, Mathf.PI / 30);
+        path2.rotate = 1;
+        path2.rotation_speed = .5f;
         Layers.Add(path2);
-        PathOnS2 path = new PathOnS2();
-        path.CirclePath(Mathf.PI / 4, Mathf.PI/30);
 
-        Layers.Add(path);
+        PathOnS2 path3 = new PathOnS2();
+        path3.SpiralPath(5, Mathf.PI/60);
+        path3.rotate = 1;
+        path3.rotation_speed = .8f;
+        Layers.Add(path3);
         //}
 
         #endregion
@@ -88,6 +123,7 @@ public class PathAnimator : MonoBehaviour
     void Projection()
     {
         #region Projection
+        int layer_number = 0;
         if (HF.Count == 0)
         {
             foreach (List<Fibre> layer in HopfLayers)
@@ -99,42 +135,14 @@ public class PathAnimator : MonoBehaviour
                     GameObject tube = Instantiate(TubeFab, Vector3.zero, Quaternion.identity) as GameObject;
                     Tube t = tube.GetComponent<Tube>();
                     t.draw(fibre.project());
+                    t.rotate = fibre.rotate;
+                    t.rotation_speed = fibre.rotation_speed;
                     LayerOfTubes.Add(t);
                 }
                 HF.Add(LayerOfTubes);
+                layer_number++;
             }
         }
-        /*
-    else
-    {
-        for (int i = 0; i < HF.Count; i++)
-        {
-            //every layer in hf
-
-            for (int j = 0; j < HF[i].Count; j++)
-            {
-                //every fibre in hf
-                HF[i][j].clear();
-                HF[i][j].draw(HopfLayers[i][j].project());
-                //Debug.Log("debug 1");
-            }
-        }
-
-        int j = 0;
-        foreach (List<Fibre> layer in HopfLayers)
-        {
-            int i = 0;
-            foreach (Fibre fibre in layer)
-            {
-                //Destroy(HF[j][i].gameObject);
-                HF[j][i].clear();
-                HF[j][i].draw(fibre.project());
-                i++;
-            }
-            j++;
-        }
-
-    }*/
         #endregion
     }
 

@@ -6,12 +6,14 @@ public class PathOnS2
 {
     public List<SphericalCoordinate> Points = new List<SphericalCoordinate>();
     public float rotation;
+    public int rotate;
+    public float rotation_speed;
 
     /*
      * HORIZONTAL CIRCLES ON S2 
      * set Points with new values.
      * Circle path along x axis defined by phi.
-     */
+     **/
     public void CirclePath(float phi, float scale, float circleWidth = (2f*Mathf.PI))
     {
         scale = (scale <= 0.01f) ? (0.01f) : ((scale < Mathf.PI*2) ? (scale) : (Mathf.PI*2));
@@ -32,8 +34,8 @@ public class PathOnS2
         }
     }
 
-    public void CirclePathVertical(float theta, float scale) {
-        CirclePath(theta, scale);
+    public void CirclePathVertical(float theta, float scale, float circleWidth = (2f * Mathf.PI)) {
+        CirclePath(theta, scale, circleWidth);
         Matrix m = new Matrix();
         m.setRotationX(90);
         rotatePath(m);
@@ -81,8 +83,14 @@ public class PathOnS2
         foreach (Point3D Point in Points)
         {
             Fibre fib = Point.toFibre();
+            fib.rotate = rotate;
+            fib.rotation_speed = rotation_speed;
             list.Add(fib);
         }
         return list;
+    }
+
+    public void draw_to_screen() {
+        
     }
 }

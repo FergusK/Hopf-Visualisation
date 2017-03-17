@@ -5,6 +5,8 @@ using System.Collections.Generic;
 public class Fibre {
     private List<Point4D> fibrePoints;
     public float Latitude, Longitude;
+    public int rotate;
+    public float rotation_speed;
 
     public Fibre(List<Point4D> fibrePoints) {
         this.fibrePoints = fibrePoints;
