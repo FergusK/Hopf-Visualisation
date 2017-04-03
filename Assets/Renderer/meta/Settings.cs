@@ -8,7 +8,7 @@ public class Settings{
     public static float ThetaScale = 0.1f;
     private static float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
     public static int Size = (int)sizeValue;
-    public static float Radius = 0.5f;
+    public static float Radius = 0.9f;
 
     //collider variables
     public static int ColliderSize = 11;

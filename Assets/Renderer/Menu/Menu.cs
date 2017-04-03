@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Menu : MonoBehaviour {
+    List<S2Input> userInput;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        userInput = new List<S2Input>();
+    }
+
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
