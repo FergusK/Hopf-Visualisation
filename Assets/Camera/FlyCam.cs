@@ -67,7 +67,9 @@ public class FlyCam : MonoBehaviour
             }
         }
         */
-
+        if (Input.GetKey(KeyCode.Escape)) {
+            Application.LoadLevel("MainMenu");
+        }
         if (calls < 400)
         {
             transform.Translate(new Vector3(0, 0, -2) * speed * Time.deltaTime);

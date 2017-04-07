@@ -34,33 +34,27 @@ public class PathAnimator : MonoBehaviour
     {
         //get menu information and translate to S2 points
 
-        foreach (S2Input s2layer in Settings.S2List) {
+        Debug.Log("outside!");
+        foreach (S2Input s2layer in Settings.S2List)
+        {
+            Debug.Log("exists!");
             PathOnS2 path = new PathOnS2();
 
             if (s2layer.type.Equals("Circle path")) {
-                if (s2layer.FloatParam3 == 0) {
-                    path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2);
-                }
-                else {
-                    path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
-                }
-
+                Debug.Log("inside!");
+                path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
             } else if (s2layer.type.Equals("Circle path vertical")) {
-                if (s2layer.FloatParam3 == 0) {
-                    path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2);
-                } else {
-                    path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
-                }
-
-            } else if (s2layer.type.Equals("Spiral path")) {
-                path.SpiralPath(s2layer.IntParam1, s2layer.FloatParam2);
-
-            } else if (s2layer.type.Equals("Spiral vertical path")) {
-                path.SpiralPathVertical(s2layer.IntParam1, s2layer.FloatParam2);
+                path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
+            }
+            else if (s2layer.type.Equals("Spiral path")) {
+                path.SpiralPath(s2layer.IntParam1, s2layer.FloatParam1);
+            } else if (s2layer.type.Equals("Spiral horizontal path")) {
+                path.SpiralPathHorizontal(s2layer.IntParam1, s2layer.FloatParam1);
             }
 
             path.rotate = s2layer.rotate;
-            path.rotation_speed = s2layer.rotation_speed;
+            if (s2layer.rotate == 1) 
+                path.rotation_speed = s2layer.rotation_speed;
             Layers.Add(path);
         }
 
@@ -93,17 +87,17 @@ public class PathAnimator : MonoBehaviour
 
         Layers.Add(path4);*/
 
-        PathOnS2 path2 = new PathOnS2();
-        path2.CirclePath(Mathf.PI/4, Mathf.PI / 30);
-        path2.rotate = 1;
-        path2.rotation_speed = .5f;
-        Layers.Add(path2);
+        //PathOnS2 path2 = new PathOnS2();
+        //path2.CirclePath(Mathf.PI/4, Mathf.PI / 30, Mathf.PI / 31);
+        //path2.rotate = 1;
+        //path2.rotation_speed = .5f;
+        //Layers.Add(path2);
 
-        PathOnS2 path3 = new PathOnS2();
-        path3.SpiralPath(5, Mathf.PI/60);
-        path3.rotate = 1;
-        path3.rotation_speed = .8f;
-        Layers.Add(path3);
+       // PathOnS2 path3 = new PathOnS2();
+        //path3.SpiralPath(5, Mathf.PI/60);
+        //path3.rotate = 1;
+       // path3.rotation_speed = .8f;
+        //Layers.Add(path3);
         //}
 
         #endregion

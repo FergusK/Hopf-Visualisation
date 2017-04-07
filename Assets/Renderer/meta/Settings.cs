@@ -8,14 +8,14 @@ public class Settings{
     public static float ThetaScale = 0.1f;
     private static float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
     public static int Size = (int)sizeValue;
-    public static float Radius = 0.9f;
+    public static float Radius = 0.4f;
 
     //collider variables
     public static int ColliderSize = 11;
     public static float ColliderThetaScale = Mathf.PI / 5;
 
-    public static string default_colour = "Latitude";
-    public static string default_click_colour = "Distance";
+    public static string default_colour = "Longitude";
+    public static string default_click_colour = "Dot";
 
     //S2 input
     public static List<S2Input> S2List = new List<S2Input>();

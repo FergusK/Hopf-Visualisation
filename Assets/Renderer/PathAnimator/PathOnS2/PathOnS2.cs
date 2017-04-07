@@ -63,7 +63,7 @@ public class PathOnS2
         }
     }
 
-    public void SpiralPathVertical(int spins, float scale) {
+    public void SpiralPathHorizontal(int spins, float scale) {
         SpiralPath(spins, scale);
         Matrix m = new Matrix();
         m.setRotationY(90);
