@@ -408,7 +408,7 @@ public class Tube : MonoBehaviour
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material.shader = Shader.Find("Custom/StandardShader");
         //print(points[0].Longitude);
-        rend.material.color = Color.HSVToRGB(Points[0].Longitude, 1, 1);
+        rend.material.color = Color.HSVToRGB(Points[0].Latitude, 1, 1);
     }
 
     public void ColorLongitude()
@@ -416,7 +416,7 @@ public class Tube : MonoBehaviour
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material.shader = Shader.Find("Custom/StandardShader");
         //print(points[0].Longitude);
-        rend.material.color = Color.HSVToRGB(Points[0].Latitude, 1, 1);
+        rend.material.color = Color.HSVToRGB(Points[0].Longitude, 1, 1);
     }
 
     public void ColorClick(float colour)
@@ -432,6 +432,7 @@ public class Tube : MonoBehaviour
 
     public void ColorDistanceClick(Vector4 Q)
     {
+        //Vector4 Q = new Vector4(Mathf.Abs(Qtemp.x), Mathf.Abs(Qtemp.y), Mathf.Abs(Qtemp.z), Mathf.Abs(Qtemp.w));
 
         Color[] colours = new Color[vertices.Length];
         int j = 0;
@@ -439,8 +440,10 @@ public class Tube : MonoBehaviour
         {
             for (int i = 0; i < tubeCount; i++)
             {
+                //Vector4 P = new Vector4(Mathf.Abs(p.quaternionVector.x), Mathf.Abs(p.quaternionVector.y), Mathf.Abs(p.quaternionVector.z), Mathf.Abs(p.quaternionVector.w));
                 Vector4 P = p.quaternionVector;
-                float d_PQ = (2 * Mathf.Acos(Mathf.Abs(Vector4.Dot(P, Q)))) / (Mathf.PI);
+
+                float d_PQ = (2 * Mathf.Acos(Vector4.Dot(P, Q)));
 
                 colours[j + i] = Color.HSVToRGB(d_PQ, 1, 1);
             }
