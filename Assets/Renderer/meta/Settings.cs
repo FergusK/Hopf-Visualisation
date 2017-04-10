@@ -5,7 +5,7 @@ using UnityEngine;
 public class Settings{
 
     //Variables for drawing tube
-    public static float ThetaScale = 0.1f;
+    public static float ThetaScale = .1f;
     private static float sizeValue = ((2f * (Mathf.PI)) / ThetaScale);
     public static int Size = (int)sizeValue;
     public static float Radius = 0.4f;
@@ -15,7 +15,7 @@ public class Settings{
     public static float ColliderThetaScale = Mathf.PI / 5;
 
     public static string default_colour = "Longitude";
-    public static string default_click_colour = "Dot";
+    public static string default_click_colour = "Quaternion";
 
     //S2 input
     public static List<S2Input> S2List = new List<S2Input>();

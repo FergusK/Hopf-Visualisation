@@ -194,7 +194,7 @@ public class Tube : MonoBehaviour
 
 
         //Initialise Collider Mesh variables
-        int colSize = 11;
+        int colSize = Settings.Size;
         colVertices = new Vector3[points.Count * colSize];
 
 
@@ -384,9 +384,7 @@ public class Tube : MonoBehaviour
         vertices = null;
         triangles = null;
         verticesIndex = 0;
-
         colliderVerticesIndex = 0;
-
     }
 
     public void ColorQuaternionW()
@@ -397,8 +395,8 @@ public class Tube : MonoBehaviour
         {
             for (int i = 0; i < tubeCount; i++)
             {
-                Vector4 P = p.quaternionVector;
-                colours[j + i] = Color.HSVToRGB(P.w, 1, 1);
+                Vector4 P = p.quaternionVector.normalized;
+                colours[j + i] = Color.HSVToRGB(Mathf.Abs(P.w), 1, 1);
             }
             j += tubeCount;
         }
@@ -421,14 +419,15 @@ public class Tube : MonoBehaviour
         rend.material.color = Color.HSVToRGB(Points[0].Latitude, 1, 1);
     }
 
-    public void ColorClick(int index)
+    public void ColorClick(float colour)
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material = rend.materials[0];
 
-        float w = (Points[index].quaternionVector.w + 1) / 2;
-        //print(points[0].Longitude);
-        rend.material.color = Color.HSVToRGB(w, 1, 1);
+        //float w = (Points[index].quaternionVector.normalized.w);
+
+        print("W value of clicked quaternion : " + colour);
+        rend.material.color = Color.HSVToRGB(Mathf.Abs(colour), 1, 1);
     }
 
     public void ColorDistanceClick(Vector4 Q)
@@ -483,19 +482,19 @@ public class Tube : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log(
-                    "Mouse Down Hit the following object: " +
-                    hit.collider.name + " Index : " + (hit.triangleIndex / 6) / 11 +
-                    " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[(hit.triangleIndex / 6)].quaternionVector.ToString() +
-                    " Collision point : " + hit.point
-                    );
+                //Debug.Log(
+                    //"Mouse Down Hit the following object: " +
+                    //hit.collider.name + " Index : " + (hit.triangleIndex / Settings.Size) +
+                    //" Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[(hit.triangleIndex / Settings.Size)].quaternionVector.ToString() +
+                    //" Collision point : " + hit.point
+                    //);
                 //hit.collider.gameObject.GetComponent<Tube>().ColorClick((hit.triangleIndex) / 3);
 
                 //Distance
-                int index = (hit.triangleIndex / 6) / 11;
+
+                int index = (hit.triangleIndex < Settings.Size) ? 0 : (hit.triangleIndex / Settings.Size);
+                print("The trouble maker index : " + index);
                 Vector4 Q = hit.collider.gameObject.GetComponent<Tube>().Points[index].quaternionVector;
-
-
 
                 //Colouring method
                 if (Settings.default_click_colour.Equals("Distance"))
@@ -508,10 +507,11 @@ public class Tube : MonoBehaviour
                 }
                 else if (Settings.default_click_colour.Equals("Quaternion"))
                 {
-                    ColorClick(index);
+                    float colour = Q.normalized.w;
+                    ColorClick(colour);
                 }
 
-                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+                //Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
             }
             else if (Input.GetMouseButtonDown(2))
@@ -519,21 +519,20 @@ public class Tube : MonoBehaviour
                 Debug.Log(
                             "Mouse Down Hit the following object: " +
                             hit.collider.name + " Index : " + hit.triangleIndex +
-                            " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / 3].quaternionVector.ToString()
+                            " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / Settings.Size].quaternionVector.ToString()
                          );
 
-                int index = hit.triangleIndex;
+                int index = hit.triangleIndex / Settings.Size;
 
                 ColorClick(index);
 
-                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+                //Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
             }
             else
             {
-
                 Debug.Log("Nothing was hit!");
-                Debug.DrawRay(ray.origin, ray.direction, Color.green);
+                //Debug.DrawRay(ray.origin, ray.direction, Color.green);
 
             }
         }

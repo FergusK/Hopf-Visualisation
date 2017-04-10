@@ -8,6 +8,7 @@ public class PathOnS2
     public float rotation;
     public int rotate;
     public float rotation_speed;
+    
 
     /*
      * HORIZONTAL CIRCLES ON S2 
@@ -46,6 +47,22 @@ public class PathOnS2
 
         /*  SPIRAL ON S2
         */
+        if (spins <= 2)
+        {
+            scale = Mathf.PI / 60;
+        }
+        else if (spins <= 3 )
+        {
+            scale = Mathf.PI / 90;
+        }
+        else if (spins <= 6)
+        {
+            scale = Mathf.PI / 110;
+        }
+        else if (spins <= 8) {
+            scale = Mathf.PI / 170;
+        }
+
         float sizeVal = 1 / scale;
         int size = (int)sizeVal;
 
@@ -90,7 +107,7 @@ public class PathOnS2
         return list;
     }
 
-    public void draw_to_screen() {
+    public void render() {
         
     }
 }

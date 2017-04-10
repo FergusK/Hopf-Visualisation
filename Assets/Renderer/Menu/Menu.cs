@@ -9,10 +9,15 @@ public class Menu : MonoBehaviour {
     Text text2;
     Text text3;
     Text speedText;
+    Text rotationDirection;
 
     private void Awake()
     {
         userInput = Settings.S2List;
+    }
+
+    public void setRotation(Text direction) {
+        rotationDirection = direction;
     }
 
     public void setText1(Text text) {
@@ -59,13 +64,18 @@ public class Menu : MonoBehaviour {
         if (Transform.FindObjectsOfType<Toggle>()[0].isOn)
         {
             Debug.Log("Rotation set");
-            input.setRotationInfo(1, float.Parse(speedText.text));
+            string val = rotationDirection.text.ToString();
+            input.setRotationInfo(val.Equals("Clockwise") ? 1 : 2, float.Parse(speedText.text));
         }
         userInput.Add(input);
     }
 
     public void Play() {
         Application.LoadLevel("Hopf scene");
+    }
+
+    public void Visualise() {
+        Application.LoadLevel("BaseVisualise");
     }
 
 }

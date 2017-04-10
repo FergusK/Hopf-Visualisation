@@ -53,7 +53,7 @@ public class PathAnimator : MonoBehaviour
             }
 
             path.rotate = s2layer.rotate;
-            if (s2layer.rotate == 1) 
+            if (s2layer.rotate == 1 || s2layer.rotate == 2) 
                 path.rotation_speed = s2layer.rotation_speed;
             Layers.Add(path);
         }
