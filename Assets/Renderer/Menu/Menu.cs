@@ -8,6 +8,7 @@ public class Menu : MonoBehaviour {
     Text text1;
     Text text2;
     Text text3;
+    Text textScale;
     Text speedText;
     Text rotationDirection;
 
@@ -33,6 +34,10 @@ public class Menu : MonoBehaviour {
         text3 = text;
     }
 
+    public void setTextScale(Text text) {
+        textScale = text;
+    }
+
     public void setSpeed(Text text) {
         speedText = text;
     }
@@ -40,9 +45,9 @@ public class Menu : MonoBehaviour {
     public void addCircleInput() {
         S2Input input = null;
         if (Transform.FindObjectsOfType<Toggle>()[2].isOn) {
-            input = new S2Input("Circle path vertical", float.Parse(text1.text), float.Parse(text3.text));
+            input = new S2Input("Circle path vertical", float.Parse(text2.text), float.Parse(text3.text), float.Parse(textScale.text));
         } else {
-            input = new S2Input("Circle path", float.Parse(text2.text), float.Parse(text3.text));
+            input = new S2Input("Circle path", float.Parse(text1.text), float.Parse(text3.text), float.Parse(textScale.text));
         }
 
         if (Transform.FindObjectsOfType<Toggle>()[1].isOn)

@@ -28,11 +28,11 @@ public class BaseWorld : MonoBehaviour {
             }
             else if (s2layer.type.Equals("Spiral path"))
             {
-                path.SpiralPath(s2layer.IntParam1, s2layer.FloatParam1);
+                path.SpiralPath(s2layer.IntParam1);
             }
             else if (s2layer.type.Equals("Spiral horizontal path"))
             {
-                path.SpiralPathHorizontal(s2layer.IntParam1, s2layer.FloatParam1);
+                path.SpiralPathHorizontal(s2layer.IntParam1);
             }
 
             path.rotate = s2layer.rotate;

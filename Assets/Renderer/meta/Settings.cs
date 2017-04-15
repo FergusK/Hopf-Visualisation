@@ -15,7 +15,7 @@ public class Settings{
     public static float ColliderThetaScale = Mathf.PI / 5;
 
     public static string default_colour = "Longitude";
-    public static string default_click_colour = "Quaternion";
+    public static string default_click_colour = "Distance";
 
     //S2 input
     public static List<S2Input> S2List = new List<S2Input>();

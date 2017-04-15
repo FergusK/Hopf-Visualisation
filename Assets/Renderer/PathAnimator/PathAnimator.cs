@@ -10,7 +10,6 @@ public class PathAnimator : MonoBehaviour
     List<PathOnS2> Layers;
     List<List<Fibre>> HopfLayers;
     List<List<Tube>> HF;
-    int noOfLayers;
 
     // Use this for initialization
     void Awake()
@@ -39,7 +38,6 @@ public class PathAnimator : MonoBehaviour
         {
             Debug.Log("exists!");
             PathOnS2 path = new PathOnS2();
-
             if (s2layer.type.Equals("Circle path")) {
                 Debug.Log("inside!");
                 path.CirclePath(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
@@ -47,9 +45,9 @@ public class PathAnimator : MonoBehaviour
                 path.CirclePathVertical(s2layer.FloatParam1, s2layer.FloatParam2, s2layer.FloatParam3);
             }
             else if (s2layer.type.Equals("Spiral path")) {
-                path.SpiralPath(s2layer.IntParam1, s2layer.FloatParam1);
+                path.SpiralPath(s2layer.IntParam1);
             } else if (s2layer.type.Equals("Spiral horizontal path")) {
-                path.SpiralPathHorizontal(s2layer.IntParam1, s2layer.FloatParam1);
+                path.SpiralPathHorizontal(s2layer.IntParam1);
             }
 
             path.rotate = s2layer.rotate;
@@ -156,8 +154,51 @@ public class PathAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //rotateBase(1);
-        //Fibration();
-        //Projection();
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Tube hitTube = hit.collider.gameObject.GetComponent<Tube>();
+
+                int index = hitTube.triangles[hit.triangleIndex * 3] / hitTube.tubeCount;
+
+                Point3D pointclick = hitTube.Points[index];
+
+                Vector4 Q = pointclick.quaternionVector;
+
+                Debug.Log(
+                    "Mouse Down Hit the following object: " +
+                    hit.collider.name + " Index : " + index +
+                    " Quaternion: (" + Q.x + ", " + Q.y + ", " + Q.z + ", " + Q.w + ")" +
+                    " Collision point : " + hit.point + " Vertices Index :" + hitTube.triangles[hit.triangleIndex * 3] + " Value In vertices: " + hitTube.vertices[hitTube.triangles[hit.triangleIndex * 3]] + 
+                    " Point registered: " + hitTube.Points[index].toString() +
+                    " Point Index : " + index
+                );
+
+                foreach (List<Tube> layer in HF) {
+                    foreach (Tube tube in layer) {
+                        if (Settings.default_click_colour.Equals("Distance"))
+                        {
+                            tube.ColorDistanceClick(Q);
+                            //tube.ColourDistanceClickFromBase(pointclick.toVector3());
+                        }
+                        else if (Settings.default_click_colour.Equals("Dot"))
+                        {
+                            tube.ColorDotProductClick(Q);
+                        } else if (Settings.default_click_colour.Equals("Distance from base")) {
+                            //ColourDistanceClickFromBase()
+                        }
+                        else if (Settings.default_click_colour.Equals("Quaternion"))
+                        {
+                            float colour = Q.normalized.w;
+                            tube.ColorClick(colour);
+                        }
+                    }
+                }
+            }
+        }
+                //rotateBase(1);
     }
 }

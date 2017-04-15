@@ -18,11 +18,11 @@ public class Tube : MonoBehaviour
     LineRenderer lr;
     public GameObject CircleFab;
     float tubeRadius;
-    int tubeCount, fibreCount;
+    public int tubeCount, fibreCount;
 
     //Mesh properties
     MeshFilter filter;
-    private Mesh mf;
+    public Mesh mf;
     public Vector3[] vertices;        //vertices
     int verticesIndex = 0;
     public int[] triangles;        //triangles
@@ -44,56 +44,6 @@ public class Tube : MonoBehaviour
         colliderMesh = new Mesh();
     }
 
-    public void temp(List<Point3D> points)
-    {
-        fibreCount = points.Count;
-
-    }
-
-    public void draw3(List<Point3D> points)
-    {
-        lr = GetComponent<LineRenderer>();
-        float ThetaScale = 0.01f;
-        float Theta = 0f;
-        int Size = (int)((2f / ThetaScale) + 1f);
-
-        lr.SetVertexCount(Size);
-        //lr.SetWidth(0.05f, 0.05f);
-
-
-        Vector3 a = new Vector3(-0.816497f, -0.408248f, 0.408248f);
-        Vector3 b = new Vector3(0.57735f, -0.57735f, 0.57735f);
-        Vector3 c = new Vector3(0, 0, 0);
-
-        //print(Size);
-
-        for (int i = 0; i < Size; i++)
-        {
-            Theta = Theta + (Mathf.PI * ThetaScale);
-            lr.SetPosition(i, c + (a * 1 * Mathf.Cos(Theta)) + (b * 1 * Mathf.Sin(Theta)));
-        }
-    }
-
-    public void draw2(List<Point3D> points)
-    {
-        /*
-        */
-
-        lr = GetComponent<LineRenderer>();
-        lr.SetWidth(0.1f, 0.1f);
-        lr.numPositions = points.Count;
-        lr.SetVertexCount(points.Count);
-        Vector3[] arrt = new Vector3[points.Count];
-        int p = 0;
-        foreach (Point3D point in points)
-        {
-            arrt[p] = point.toVector3();
-            p++;
-        }
-        // SetPoints(arr,,Color.white);
-        lr.SetPositions(arrt);
-    }
-
     /**
      * This draw call will render a mesh in the shape of a tube
      * given points as an argument. It will draw the mesh relevant to
@@ -104,21 +54,8 @@ public class Tube : MonoBehaviour
     {
         points.Add(points[1]);
         Points = points;
+        Debug.Log("Points 0 index : " + points[0].toString() + " Length : " + points.Count + " Points Length : " + Points.Count);
         fibreCount = points.Count;
-        /*
-        lr = GetComponent<LineRenderer>();
-        lr.SetWidth(0.1f, 0.1f);
-        lr.SetVertexCount(3);
-        Vector3[] arrt = new Vector3[points.Count];
-        int p = 0;
-        foreach (Point3D point in points)
-        {
-            arrt[p] = point.toVector3();
-            p++;
-        }
-       // SetPoints(arr,,Color.white);
-        lr.SetPositions(arrt);
-        */
 
         /**
          * Calculate the centre point of the circle from the points given.
@@ -136,9 +73,9 @@ public class Tube : MonoBehaviour
         Vector3 PR = new Vector3((R.x - P.x), (R.y - P.y), (R.z - P.z));
 
         /*
-        print("X: " + P.x + " Y: " + P.y + " Z: " + P.z);
-        print("X: " + Q.x + " Y: " + Q.y + " Z: " + Q.z);
-        print("X: " + R.x + " Y: " + R.y + " Z: " + R.z);
+            print("X: " + P.x + " Y: " + P.y + " Z: " + P.z);
+            print("X: " + Q.x + " Y: " + Q.y + " Z: " + Q.z);
+            print("X: " + R.x + " Y: " + R.y + " Z: " + R.z);
         */
 
         float PQlength = Mathf.Pow(Mathf.Pow(PQ.x, 2) + Mathf.Pow(PQ.y, 2) + Mathf.Pow(PQ.z, 2), 0.5f);
@@ -256,7 +193,7 @@ public class Tube : MonoBehaviour
         mf.vertices = vertices;
         mf.normals = normals;
         mf.triangles = triangles;
-
+        //filter.sharedMesh = mf;
         //Colouring method
         if (Settings.default_colour.Equals("Latitude")){
             ColorLatitude();
@@ -266,19 +203,6 @@ public class Tube : MonoBehaviour
             ColorQuaternionW();
         }
 
-        // create new colors array where the colors will be created.
-
-        /*
-        Color[] colors = new Color[vertices.Length];
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            colors[i] = Color.Lerp(Color.red, Color.green, vertices[i].y);
-        }
-        */
-
-        // assign the array of colors to the Mesh.
-        //mf.colors = colors;
         mf.RecalculateBounds();
 
 
@@ -352,8 +276,6 @@ public class Tube : MonoBehaviour
 
     public void setColliderTriangles()
     {
-
-
         int length = colliderTubeCount * (fibreCount - 1);
         colliderTriangles = new int[length * 6];
         int flag = 0;
@@ -407,7 +329,6 @@ public class Tube : MonoBehaviour
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material.shader = Shader.Find("Custom/StandardShader");
-        //print(points[0].Longitude);
         rend.material.color = Color.HSVToRGB(Points[0].Latitude, 1, 1);
     }
 
@@ -415,7 +336,6 @@ public class Tube : MonoBehaviour
     {
         MeshRenderer rend = GetComponent<MeshRenderer>();
         rend.material.shader = Shader.Find("Custom/StandardShader");
-        //print(points[0].Longitude);
         rend.material.color = Color.HSVToRGB(Points[0].Longitude, 1, 1);
     }
 
@@ -430,25 +350,51 @@ public class Tube : MonoBehaviour
         rend.material.color = Color.HSVToRGB(Mathf.Abs(colour), 1, 1);
     }
 
+    public void ColorNear(int index) {
+        int vIndex = index * tubeCount;
+        
+        for (int i = 0; i < tubeCount; i++) {
+            mf.colors[vIndex + i] = Color.white;
+        }
+    }
+
     public void ColorDistanceClick(Vector4 Q)
     {
-        //Vector4 Q = new Vector4(Mathf.Abs(Qtemp.x), Mathf.Abs(Qtemp.y), Mathf.Abs(Qtemp.z), Mathf.Abs(Qtemp.w));
+        MeshRenderer rend = GetComponent<MeshRenderer>();
+        rend.material.shader = Shader.Find("Custom/StandardShader");
+        rend.material.color = Color.white;
 
         Color[] colours = new Color[vertices.Length];
         int j = 0;
         foreach (Point3D p in Points)
         {
+            Vector4 P = p.quaternionVector;
+            float d_PQ = (2 * Mathf.Acos(Vector4.Dot(P, Q))) / (2 * Mathf.PI);
             for (int i = 0; i < tubeCount; i++)
             {
-                //Vector4 P = new Vector4(Mathf.Abs(p.quaternionVector.x), Mathf.Abs(p.quaternionVector.y), Mathf.Abs(p.quaternionVector.z), Mathf.Abs(p.quaternionVector.w));
-                Vector4 P = p.quaternionVector;
-
-                float d_PQ = (2 * Mathf.Acos(Vector4.Dot(P, Q)));
-
                 colours[j + i] = Color.HSVToRGB(d_PQ, 1, 1);
             }
             j += tubeCount;
         }
+        mf.colors = colours;
+    }
+
+    public void ColourDistanceClickFromBase(Vector3 Q) {
+
+        Color[] colours = new Color[vertices.Length];
+        int j = 0;
+
+        foreach (Point3D p in Points)
+        {
+            Vector3 P = p.toVector3();
+            float d_PQ = (Mathf.Acos(Vector3.Dot(P.normalized, Q.normalized))) / (2 * Mathf.PI);
+            for (int i = 0; i < tubeCount; i++)
+            {
+                colours[j + i] = Color.HSVToRGB(d_PQ, 1, 1);
+            }
+            j += tubeCount;
+        }
+
         mf.colors = colours;
     }
 
@@ -478,26 +424,28 @@ public class Tube : MonoBehaviour
             newRotation.eulerAngles = new Vector3(0, -rotation_speed, 0);  //the degrees the vertices are to be rotated, for example (0,90,0) 
             this.transform.Rotate(newRotation.eulerAngles);
         }
-            
-        if (Input.GetMouseButtonDown(0))
+        /*    
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                //Debug.Log(
-                    //"Mouse Down Hit the following object: " +
-                    //hit.collider.name + " Index : " + (hit.triangleIndex / Settings.Size) +
-                    //" Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[(hit.triangleIndex / Settings.Size)].quaternionVector.ToString() +
-                    //" Collision point : " + hit.point
-                    //);
-                //hit.collider.gameObject.GetComponent<Tube>().ColorClick((hit.triangleIndex) / 3);
-
-                //Distance
-
-                int index = (hit.triangleIndex < Settings.Size) ? 0 : (hit.triangleIndex / Settings.Size);
-                print("The trouble maker index : " + index);
+                int index = triangles[hit.triangleIndex] / tubeCount;
                 Vector4 Q = hit.collider.gameObject.GetComponent<Tube>().Points[index].quaternionVector;
+
+                Debug.Log(
+                    "Mouse Down Hit the following object: " +
+                    hit.collider.name + " Index : " + index +
+                    " Quaternion: (" + Q.x + ", " + Q.y + ", " + Q.z + ", " + Q.w + ")" +
+                    " Collision point : " + hit.point
+                    );
+
+                //if (index > fibreCount) {
+                    //print(" WELL SOMETHING IS WRONG THEN : " + index);
+                //}
+
+                //print("The trouble maker index : " + index);
 
                 //Colouring method
                 if (Settings.default_click_colour.Equals("Distance"))
@@ -513,9 +461,7 @@ public class Tube : MonoBehaviour
                     float colour = Q.normalized.w;
                     ColorClick(colour);
                 }
-
                 //Debug.DrawRay(ray.origin, ray.direction, Color.green);
-
             }
             else if (Input.GetMouseButtonDown(2))
             {
@@ -528,33 +474,13 @@ public class Tube : MonoBehaviour
                 int index = hit.triangleIndex / Settings.Size;
 
                 ColorClick(index);
-
-                //Debug.DrawRay(ray.origin, ray.direction, Color.green);
-
             }
             else
             {
                 Debug.Log("Nothing was hit!");
                 //Debug.DrawRay(ray.origin, ray.direction, Color.green);
-
             }
         }
+        */
     }
-
-    /*public void rotate()
-    {
-        Matrix m = new Matrix();
-        m.setRotationY((Mathf.PI / 11) * 1.5f * Time.deltaTime);
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            Point3D p = new Point3D(vertices[i]);
-
-            p.transform(m);
-            vertices[i] = p.toVector3();
-        }
-
-        mf.vertices = vertices;
-        mf.RecalculateBounds();
-    }*/
 }

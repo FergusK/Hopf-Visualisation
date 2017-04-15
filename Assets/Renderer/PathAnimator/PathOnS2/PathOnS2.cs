@@ -42,9 +42,9 @@ public class PathOnS2
         rotatePath(m);
     }
 
-    public void SpiralPath(int spins, float scale)
+    public void SpiralPath(int spins)
     {
-
+        float scale = Mathf.PI / 60;
         /*  SPIRAL ON S2
         */
         if (spins <= 2)
@@ -80,8 +80,8 @@ public class PathOnS2
         }
     }
 
-    public void SpiralPathHorizontal(int spins, float scale) {
-        SpiralPath(spins, scale);
+    public void SpiralPathHorizontal(int spins) {
+        SpiralPath(spins);
         Matrix m = new Matrix();
         m.setRotationY(90);
         rotatePath(m);

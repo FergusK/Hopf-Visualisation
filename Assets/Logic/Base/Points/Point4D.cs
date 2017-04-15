@@ -15,7 +15,7 @@ public class Point4D{
 
     public Point3D project()
     {
-        Point3D p = new Point3D(10 * y / (w - 1), 10 * x / (w - 1), 10 * z / (w - 1));
+        Point3D p = new Point3D(10 * (y / (1 + w)), 10 * (x / (1 + w)), 10 * (z / (1 + w)));
         p.quaternionVector = new Vector4(x, y, z, w);
         return p;
     }

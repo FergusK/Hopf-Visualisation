@@ -17,11 +17,14 @@ public class S2Input {
         //empty constructor
     }
 
-    public S2Input(string type, float phi, float width) {
+    public S2Input(string type, float phi, float width, float scale) {
         //circle non vertical path.
         this.type = type;
         FloatParam1 = phi;
-        FloatParam2 = 0.1f;
+        if (scale < 0.1f || scale > Mathf.PI)
+            FloatParam2 = 0.1f;
+        else
+            FloatParam2 = scale;
         FloatParam3 = width;
     }
 
@@ -29,7 +32,6 @@ public class S2Input {
     {
         this.type = type;
         IntParam1 = k;
-        FloatParam1 = Mathf.PI / 60;
     }
 
     public S2Input(string type, int IntParam1, float FloatParam1, float FloatParam2, float FloatParam3,
