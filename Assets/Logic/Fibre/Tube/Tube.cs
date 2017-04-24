@@ -56,7 +56,6 @@ public class Tube : MonoBehaviour
         Points = points;
         Debug.Log("Points 0 index : " + points[0].toString() + " Length : " + points.Count + " Points Length : " + Points.Count);
         fibreCount = points.Count;
-
         /**
          * Calculate the centre point of the circle from the points given.
          * Also calculate the Radius of the circle.
@@ -86,8 +85,8 @@ public class Tube : MonoBehaviour
         Vector3 PQnorm = new Vector3(PQ.x / PQlength, PQ.y / PQlength, PQ.z / PQlength);
         Vector3 PRnorm = new Vector3(PR.x / PQlength, PR.y / PQlength, PR.z / PQlength);
 
-        float cosQPR = (Mathf.Pow(PQlength, 2) + Mathf.Pow(PRlength, 2) - Mathf.Pow(QRlength, 2)) / (2 * PQlength * PRlength);
-
+        //float cosQPR = (Mathf.Pow(PQlength, 2) + Mathf.Pow(PRlength, 2) - Mathf.Pow(QRlength, 2)) / (2 * PQlength * PRlength);
+        float cosQPR = Vector3.Dot(PQ, PR) / (PQlength*PRlength);
         /*
         print("COS: " + cosQPR);
         */
@@ -99,7 +98,7 @@ public class Tube : MonoBehaviour
         Vector3 DC = new Vector3((R.x - D.x) / CD, (R.y - D.y) / CD, (R.z - D.z) / CD);
 
         float sinBAC = Mathf.Pow((1 - Mathf.Pow(cosQPR, 2)), 0.5f);
-
+        //float sinBAC = ;
         /*
         print("SIN: "+sinBAC);
         */
@@ -107,7 +106,10 @@ public class Tube : MonoBehaviour
         float radius = QRlength / (2 * sinBAC);
 
         Vector3 E = new Vector3(PQlength / 2, Mathf.Pow(Mathf.Pow(radius, 2) - Mathf.Pow((PQlength / 2), 2), 0.5f), 0);
-        Vector3 centre = new Vector3(P.x + E.x * PQ.x + E.y * DC.x, P.y + E.x * PQ.y + E.y * DC.y, P.z + E.x * PQ.z + E.y * DC.z);
+        Vector3 centre = new Vector3(P.x + E.x * PQ.x + E.y * DC.x,
+                                     P.y + E.x * PQ.y + E.y * DC.y, 
+                                     P.z + E.x * PQ.z + E.y * DC.z
+                                     );
 
         //Vector3[] array = { new Vector3(0, 0, 0), centre };
         //lr.SetPositions(array);
@@ -134,6 +136,7 @@ public class Tube : MonoBehaviour
         int colSize = Settings.Size;
         colVertices = new Vector3[points.Count * colSize];
 
+        
 
         foreach (Point3D point in points)
         {
@@ -158,11 +161,9 @@ public class Tube : MonoBehaviour
             //calculate a vector perpendicular to two vectors; Vector(radius to CurrentPoint), Vector(PreviousPoint to CurrentPoint)
             Vector3 rVector = new Vector3(point.x - centre.x, point.y - centre.y, point.z - centre.z);
             Vector3 pVector = new Vector3(point.x - arr[previous].x, point.y - arr[previous].y, point.z - arr[previous].z);
-
-            GameObject tubeCircle = Instantiate(CircleFab, Vector3.zero, Quaternion.identity) as GameObject;
-
+            
             //draw and return vertices for tubeCircle
-            Circle circle = tubeCircle.GetComponent<Circle>();
+            Circle circle = new Circle();
             circle.draw(Vector3.Cross(rVector, pVector).normalized, rVector.normalized, point.toVector3());
 
             Vector3[] TubeCircleVertices = circle.get();

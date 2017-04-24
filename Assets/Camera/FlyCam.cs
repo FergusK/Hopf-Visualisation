@@ -33,49 +33,17 @@ public class FlyCam : MonoBehaviour
             Display.displays[2].Activate();
 
         lastMouse = Input.mousePosition;
-        transform.position = new Vector3(0, 0, 0);
+        transform.position = new Vector3(0, 0, 175);
 
-        transform.Translate(0, 0, 0);
+        transform.Rotate(0, 180, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                Debug.Log(
-                    "Mouse Down Hit the following object: " + 
-                    hit.collider.name + " Index : " + hit.triangleIndex/3 + 
-                    " Quaternion: " + hit.collider.gameObject.GetComponent<Tube>().Points[hit.triangleIndex / 3].quaternionVector.ToString()
-                    );
-                hit.collider.gameObject.GetComponent<Tube>().ColorClick((hit.triangleIndex) / 3);
-
-                Debug.DrawRay(ray.origin, ray.direction, Color.green);
-                
-            }
-            else
-            {
-
-                Debug.Log("Nothing was hit!");
-                Debug.DrawRay(ray.origin, ray.direction, Color.green);
-
-            }
-        }
-        */
+        
         if (Input.GetKey(KeyCode.Escape)) {
             Application.LoadLevel("MainMenu");
-        }
-        if (calls < 400)
-        {
-            transform.Translate(new Vector3(0, 0, -2) * speed * Time.deltaTime);
-            calls++;
-            transform.LookAt(new Vector3(0, 0, 0));
-            return;
         }
         if (Input.GetKey(KeyCode.LeftShift))
         {

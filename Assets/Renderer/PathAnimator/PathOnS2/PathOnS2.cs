@@ -27,8 +27,8 @@ public class PathOnS2
         for (float theta = 0f; i < size; theta += scale)
         {
             SphericalCoordinate SphereCoordinate = new SphericalCoordinate(1, theta, phi);
-            SphereCoordinate.Latitude = phi / (Mathf.PI);
-            SphereCoordinate.Longitude = theta / (Mathf.PI * 2);
+            SphereCoordinate.Latitude = theta / (Mathf.PI * 2);
+            SphereCoordinate.Longitude = phi / (Mathf.PI);
 
             Points.Add(SphereCoordinate);
             i++;
@@ -75,7 +75,7 @@ public class PathOnS2
             Points.Add(SphereCoordinate);
             //_LineDrawer.SetPosition(i, SphereCoordinate.ToCartesian());
             SphereCoordinate.Latitude = t;
-            SphereCoordinate.Longitude = t;
+            SphereCoordinate.Longitude = (t * Mathf.PI) / (Mathf.PI);
             i++;
         }
     }

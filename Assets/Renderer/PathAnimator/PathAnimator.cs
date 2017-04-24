@@ -5,6 +5,7 @@ public class PathAnimator : MonoBehaviour
 {
 
     public GameObject TubeFab;
+    private IEnumerator coroutine;
     //public LineRenderer Renderer;
 
     List<PathOnS2> Layers;
@@ -24,14 +25,18 @@ public class PathAnimator : MonoBehaviour
 
     void main()
     {
+        print("Start time: " + Time.time);
         Base();
         Fibration();
-        Projection();
-    }
+        coroutine = Projection(0.001f);
+        StartCoroutine(coroutine);
+        print("End time: " + Time.time);
+}
 
     void Base()
     {
         //get menu information and translate to S2 points
+        float starttime = Time.time;
 
         Debug.Log("outside!");
         foreach (S2Input s2layer in Settings.S2List)
@@ -55,7 +60,7 @@ public class PathAnimator : MonoBehaviour
                 path.rotation_speed = s2layer.rotation_speed;
             Layers.Add(path);
         }
-
+        print("Base time taken: " + (Time.time - starttime));
 
         #region Base
         //for (int i = 0; i < noOfLayers; i++)
@@ -91,10 +96,10 @@ public class PathAnimator : MonoBehaviour
         //path2.rotation_speed = .5f;
         //Layers.Add(path2);
 
-       // PathOnS2 path3 = new PathOnS2();
+        // PathOnS2 path3 = new PathOnS2();
         //path3.SpiralPath(5, Mathf.PI/60);
         //path3.rotate = 1;
-       // path3.rotation_speed = .8f;
+        // path3.rotation_speed = .8f;
         //Layers.Add(path3);
         //}
 
@@ -103,6 +108,7 @@ public class PathAnimator : MonoBehaviour
 
     void Fibration()
     {
+        float starttime = Time.time;
         #region Fibration
         foreach (PathOnS2 path in Layers)
         {
@@ -110,10 +116,12 @@ public class PathAnimator : MonoBehaviour
             HopfLayers.Add(HopfLayer);
         }
         #endregion
+        print("Fibration time taken: " + (Time.time - starttime));
     }
 
-    void Projection()
+    private IEnumerator Projection(float time)
     {
+        float starttime = Time.time;
         #region Projection
         int layer_number = 0;
         if (HF.Count == 0)
@@ -124,18 +132,22 @@ public class PathAnimator : MonoBehaviour
 
                 foreach (Fibre fibre in layer)
                 {
+                    yield return new WaitForSeconds(time);
+                    print("WaitAndPrint " + Time.time);
                     GameObject tube = Instantiate(TubeFab, Vector3.zero, Quaternion.identity) as GameObject;
                     Tube t = tube.GetComponent<Tube>();
                     t.draw(fibre.project());
                     t.rotate = fibre.rotate;
                     t.rotation_speed = fibre.rotation_speed;
                     LayerOfTubes.Add(t);
+                    
                 }
                 HF.Add(LayerOfTubes);
                 layer_number++;
             }
         }
         #endregion
+        print("Projection time taken: " + (Time.time - starttime));
     }
 
     void rotateBase(float ve)
@@ -154,6 +166,7 @@ public class PathAnimator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -167,7 +180,7 @@ public class PathAnimator : MonoBehaviour
                 Point3D pointclick = hitTube.Points[index];
 
                 Vector4 Q = pointclick.quaternionVector;
-
+                /*
                 Debug.Log(
                     "Mouse Down Hit the following object: " +
                     hit.collider.name + " Index : " + index +
@@ -176,7 +189,7 @@ public class PathAnimator : MonoBehaviour
                     " Point registered: " + hitTube.Points[index].toString() +
                     " Point Index : " + index
                 );
-
+                */
                 foreach (List<Tube> layer in HF) {
                     foreach (Tube tube in layer) {
                         if (Settings.default_click_colour.Equals("Distance"))
