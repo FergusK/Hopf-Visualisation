@@ -388,7 +388,7 @@ public class Tube : MonoBehaviour
         foreach (Point3D p in Points)
         {
             Vector3 P = p.toVector3();
-            float d_PQ = (Mathf.Acos(Vector3.Dot(P.normalized, Q.normalized))) / (2 * Mathf.PI);
+            float d_PQ = (Mathf.Acos(Vector3.Dot(P, Q))) / (2 * Mathf.PI);
             for (int i = 0; i < tubeCount; i++)
             {
                 colours[j + i] = Color.HSVToRGB(d_PQ, 1, 1);

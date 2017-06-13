@@ -43,6 +43,7 @@ public class FlyCam : MonoBehaviour
     {
         
         if (Input.GetKey(KeyCode.Escape)) {
+            Settings.S2List.Clear();
             Application.LoadLevel("MainMenu");
         }
         if (Input.GetKey(KeyCode.LeftShift))
